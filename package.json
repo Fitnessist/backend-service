@@ -46,8 +46,10 @@
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
   },
-  "lint-staged": [
-    "npm run lint",
-    "npm run test:staged"
-  ]
+  "lint-staged": {
+    "*.ts": [
+      "npm run lint",
+      "npm run test:staged"
+    ]
+  }
 }

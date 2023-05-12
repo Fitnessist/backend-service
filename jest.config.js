@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { default: tsjPreset } = require("ts-jest/presets");
+const { defaults: tsjPreset } = require("ts-jest/presets");
 /*
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
