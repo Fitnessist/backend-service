@@ -10,7 +10,7 @@
     "start": "node dist/main/server.js",
     "start:dev": "concurrently --kill-others-on-fail \"npm run build:watch\" \"npm run start\"",
     "test": "jest --passWithNoTests --runInBand --no-cache",
-    "test:stage": "npm run test -- --findRelatedTests",
+    "test:staged": "npm run test -- --findRelatedTests",
     "test:ci": "npm run test -- --coverage",
     "lint": "eslint --ext .ts --ignore-path .gitignore --fix src/",
     "prepare": "husky install"
@@ -39,10 +39,15 @@
     "eslint-plugin-promise": "^6.1.1",
     "husky": "^8.0.0",
     "jest": "^29.5.0",
+    "lint-staged": "^13.2.2",
     "nodemon": "^2.0.22",
     "rimraf": "^5.0.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
-  }
+  },
+  "lint-staged": [
+    "npm run lint",
+    "npm run test:staged"
+  ]
 }
