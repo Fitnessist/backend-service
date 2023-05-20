@@ -1,0 +1,13 @@
+openapi: "3.0.2"
+info:
+    title: Boilerplate for RESTful API with initials feature
+    version: "1.0"
+servers:
+    - url: http://localhost/api
+      description: base url
+paths:
+    /:
+        get:
+            responses:
+                "200":
+                    description: OK
