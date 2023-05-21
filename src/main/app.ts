@@ -2,13 +2,13 @@
 require("module-alias/register")
 
 import * as dotenv from "dotenv"
+dotenv.config()
+
 import Server from "@infrastructure/http/server"
 import apiRouter from "@delivery/http/api/v1/routers/routes"
 import pool from "@infrastructure/database/postgres"
 import container from "@infrastructure/container"
 import { type Logger } from "@infrastructure/log/Logger"
-
-dotenv.config()
 
 const port = Number(process.env.PORT ?? 8000)
 const logger = container.getInstance("Logger") as Logger

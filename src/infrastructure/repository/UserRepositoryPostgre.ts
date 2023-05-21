@@ -27,8 +27,8 @@ export class UserRepositoryPostgre implements UserRepositoryInterface {
 
             const user: User = result.rows[0] as User
             return user
-        } catch (error) {
-            this.logger.error(`error during getting data ${String(error)}`)
+        } catch (error: any) {
+            this.logger.error(`error during getting data ${String(error.stack)}`)
             return null
         }
     }
@@ -43,11 +43,10 @@ export class UserRepositoryPostgre implements UserRepositoryInterface {
             if (result.rowCount === 0) {
                 return null
             }
-
             const user: User = result.rows[0]
             return user
-        } catch (error) {
-            this.logger.error(`error during getting data ${String(error)}`)
+        } catch (error: any) {
+            this.logger.error(`error during getting data ${String(error.stack)}`)
             return null
         }
     }

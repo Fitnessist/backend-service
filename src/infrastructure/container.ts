@@ -1,7 +1,7 @@
 import { createContainer } from "instances-container"
 import { UserRepositoryPostgre } from "@infrastructure/repository/UserRepositoryPostgre"
 import pool from "@infrastructure/database/postgres"
-import { v5 as uuidGenerator } from "uuid"
+import { v4 as uuidGenerator } from "uuid"
 import { WLogger } from "@infrastructure/log/WinstoneLogger"
 import { BcryptPasswordEncryptor } from "@infrastructure/security/BcryptPasswordEncryptor"
 import bcrypt from "bcrypt"

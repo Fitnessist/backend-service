@@ -1,7 +1,7 @@
 module.exports = {
     up: (pgm) => {
         pgm.createTable("users", {
-            id: "id",
+            id: { type: "varchar(40)", notNull: true, primaryKey: true },
             name: { type: "varchar(100)", notNull: true },
             email: { type: "varchar(100)", notNull: true, unique: true },
             username: { type: "varchar(100)", notNull: true, unique: true },

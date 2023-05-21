@@ -49,7 +49,7 @@ export class RegisterUserUseCase {
             return id
         } catch (error: any) {
             this.logger.error(
-                `Error during user registration: ${String(error.message)}`
+                `Error during user registration: ${String(error.message)} + stack: ${String(error.stack)}`
             )
             throw error
         }
