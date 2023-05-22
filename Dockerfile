@@ -1,5 +1,5 @@
-#build the app
-FROM node:lts-alpine as builder
+# Build the app
+FROM node:lts-alpine as build
 LABEL stage=dockerbuilder
 WORKDIR /usr/app
 COPY . .
@@ -8,13 +8,11 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm run lint && npm run test:staged
 RUN npm run build
 
+# Create the production image
 FROM node:lts-alpine 
 ENV NODE_ENV=production
 WORKDIR /usr/production/app
 COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install --production --silent && mv node_modules ../
-COPY --from=builder /usr/app .
-EXPOSE 8000
-RUN chown -R node /usr/app
-USER node
+COPY --from=builder /usr .
 CMD ["npm", "start"]
