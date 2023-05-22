@@ -23,8 +23,8 @@ module.exports = {
 
     // An array of glob patterns indicating a set of files for which coverage information should be collected
     collectCoverageFrom: [
-        "<rootDir>/src/**/*.ts",
-        "<rootDir>/src/main/**/*.ts",
+        "<rootDir>/**/*.ts",
+        "<rootDir>/main/**/*.ts",
     ],
 
     // The directory where Jest should output its coverage files
@@ -93,7 +93,16 @@ module.exports = {
     // ],
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-    // moduleNameMapper: {},
+    moduleNameMapper: {
+        '^@domain/(.*)$': '<rootDir>/domain/$1',
+        '^@infrastructure/(.*)$': '<rootDir>/infrastructure/$1',
+        '^@application/(.*)$': '<rootDir>/application/$1',
+        '^@common/(.*)$': '<rootDir>/common/$1',
+        '^@delivery/(.*)$': '<rootDir>/delivery/$1',
+        '^@main/(.*)$': '<rootDir>/main/$1',
+        '^@middleware/(.*)$': '<rootDir>/middleware/$1',
+        '^@test/(.*)$': '<rootDir>/../test/$1',
+    },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
@@ -126,7 +135,7 @@ module.exports = {
     // restoreMocks: false,
 
     // The root directory that Jest should scan for tests and modules within
-    // rootDir: undefined,
+    rootDir: "./src",
 
     // A list of paths to directories that Jest should use to search for files in
     // roots: [
@@ -137,7 +146,7 @@ module.exports = {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    // setupFiles: [],
+    setupFiles: ["dotenv/config"],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     // setupFilesAfterEnv: [],
@@ -149,7 +158,7 @@ module.exports = {
     // snapshotSerializers: [],
 
     // The test environment that will be used for testing
-    // testEnvironment: "jest-environment-node",
+    testEnvironment: "node",
 
     // Options that will be passed to the testEnvironment
     // testEnvironmentOptions: {},
