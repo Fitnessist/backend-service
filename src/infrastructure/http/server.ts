@@ -9,19 +9,26 @@ import { ConflictException } from "@common/exceptions/ConflictException"
 import { InternalServerErrorException } from "@common/exceptions/InternalServerErrorException"
 import { ServiceUnavailableException } from "@common/exceptions/ServiceUnavailableException"
 import { type Logger } from "@infrastructure/log/Logger"
+import http, { type Server as HTTPServer } from "http"
 
 export default class Server {
     private readonly app: express.Application
+    private readonly server: HTTPServer
     private readonly port: number
     private readonly errorHandler: ErrorHandler
     private readonly logger: Logger
 
     public constructor (port: number, logger: Logger) {
         this.app = express()
+        this.server = http.createServer(this.app)
         this.logger = logger
         this.port = port
         this.app.use(bodyParser.json())
         this.errorHandler = new ErrorHandler()
+    }
+
+    public getApp (): express.Application {
+        return this.app
     }
 
     public registerErrorHandler (): void {
@@ -51,10 +58,16 @@ export default class Server {
     }
 
     public run (): void {
-        this.app.listen(this.port, () => {
+        this.server?.listen(this.port, () => {
             this.logger.info(
                 `Server listening  on http://localhost:${Number(this.port)}`
             )
+        })
+    }
+
+    public closeServer (): void {
+        this.server?.close(() => {
+            this.logger.info("Server closed.")
         })
     }
 }

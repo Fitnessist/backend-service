@@ -29,6 +29,10 @@ export class UsersTableTestHelper {
     }
 
     public async cleanTable (): Promise<void> {
-        await pool.query("TRUNCATE TABLE users")
+        await pool.query("DELETE FROM users")
+    }
+
+    public async closePool (): Promise<void> {
+        await pool.end()
     }
 }

@@ -22,6 +22,7 @@ process.on("SIGINT", () => {
     pool.end(() => {
         logger.info("Database connection pool closed.")
         logger.info("Server shutdown gracefully")
+        server.closeServer()
         process.exit(0)
     })
 })
