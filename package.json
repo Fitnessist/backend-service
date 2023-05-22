@@ -55,6 +55,10 @@
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
   },
+  "peerDependencies": {
+    "jest" : "^29.5.0",
+    "ts-jest" : "^29.1.0"
+  },
   "lint-staged": {
     "*.ts": [
       "npm run lint",
