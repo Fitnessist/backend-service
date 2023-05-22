@@ -6,10 +6,10 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "build:watch": "npm run build --watch",
-    "dev": "nodemon -L --watch ./dist ./dist/main/app.js",
+    "dev": "nodemon -L --watch ./dist ./dist/src/main/app.js",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate -f config/database/test.json",
-    "start": "node dist/main/app.js",
+    "start": "node dist/src/main/app.js",
     "start:dev": "concurrently --kill-others-on-fail \"npm run build:watch\" \"npm run dev\"",
     "test": "jest --passWithNoTests --runInBand --no-cache",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
@@ -79,13 +79,13 @@
     "winston": "^3.8.2"
   },
   "_moduleAliases": {
-    "@application": "dist/application",
-    "@common": "dist/common",
-    "@domain": "dist/domain",
-    "@delivery": "dist/delivery",
-    "@infrastructure": "dist/infrastructure",
-    "@main": "dist/main",
-    "@middleware": "dist/middleware"
+    "@application": "dist/src/application",
+    "@common": "dist/src/common",
+    "@domain": "dist/src/domain",
+    "@delivery": "dist/src/delivery",
+    "@infrastructure": "dist/src/infrastructure",
+    "@main": "dist/src/main",
+    "@middleware": "dist/src/middleware"
   },
   "engines": {
     "node": "18.x"
