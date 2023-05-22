@@ -19,7 +19,7 @@ export class TokenRepositoryPostgre implements TokenRepository {
 
     async findTokenByRefreshToken (refreshToken: string): Promise<Token | null> {
         const query: QueryConfig = {
-            text: "SELECT * FROM refresh_tokens WHERE refresh_token = $1",
+            text: "SELECT * FROM refresh_tokens WHERE refresh_token = $1 LIMIT 1",
             values: [refreshToken]
         }
         const result = await this.pool.query(query)

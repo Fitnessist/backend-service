@@ -1,4 +1,4 @@
-import { type Request, type Response } from "express"
+import { type NextFunction, type Request, type Response } from "express"
 import { type RegisterUserUseCase } from "@application/user/usecase/RegistrationUseCase"
 import { type Logger } from "@infrastructure/log/Logger"
 import { RegisterUser } from "@domain/user/entity/RegisterUser"
@@ -32,7 +32,7 @@ export class AuthController {
         })
     }
 
-    public login (req: Request, res: Response): void {
+    public login (req: Request, res: Response, next: NextFunction): void {
         const { email, password } = req.body
 
         // Create a login user object
@@ -46,8 +46,7 @@ export class AuthController {
                 sendSuccess(res, HTTP_STATUS.OK, { accessToken, refreshToken }, "OK")
             })
             .catch((error: any) => {
-                this.logger.error(`Error during user login: ${String(error.message)} + stack: ${String(error.stack)}`)
-                sendError(res, HTTP_STATUS.BAD_REQUEST, "BAD REQUEST", error.message)
+                next(error)
             })
     }
 }
