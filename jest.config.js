@@ -98,7 +98,10 @@ module.exports = {
         '^@infrastructure/(.*)$': '<rootDir>/infrastructure/$1',
         '^@application/(.*)$': '<rootDir>/application/$1',
         '^@common/(.*)$': '<rootDir>/common/$1',
-        '^@delivery/(.*)$': '<rootDir>/delivery/$1'
+        '^@delivery/(.*)$': '<rootDir>/delivery/$1',
+        '^@main/(.*)$': '<rootDir>/main/$1',
+        '^@middleware/(.*)$': '<rootDir>/middleware/$1',
+        '^@test/(.*)$': '<rootDir>/../test/$1',
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

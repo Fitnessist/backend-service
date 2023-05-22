@@ -6,8 +6,166 @@ servers:
     - url: http://localhost/api
       description: base url
 paths:
-    /:
-        get:
+    /register:
+        post:
+            summary: Register a new user
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/RegisterUser"
+            responses:
+                "201":
+                    description: User successfully registered
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/RegisterUserResponse"
+                "400":
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ValidationError"
+    /login:
+        post:
+            summary: User login
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LoginUser"
             responses:
                 "200":
-                    description: OK
+                    description: User logged in successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/LoginResponse"
+                "401":
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorUnauthorized"
+                "400":
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ValidationError"
+components:
+    schemas:
+        RegisterUser:
+            type: object
+            properties:
+                email:
+                    type: string
+                username:
+                    type: string
+                name:
+                    type: string
+                password:
+                    type: string
+                passwordConfirmation:
+                    type: string
+            required:
+                - email
+                - username
+                - name
+                - password
+                - passwordConfirmation
+        RegisterUserResponse:
+            type: object
+            properties:
+                status:
+                    $ref: "#/components/schemas/Status"
+                data:
+                    type: object
+                    properties:
+                        lastInsertedID:
+                            type: string
+            required:
+                - status
+                - data
+        LoginUser:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+            required:
+                - email
+                - password
+        LoginResponse:
+            type: object
+            properties:
+                status:
+                    $ref: "#/components/schemas/Status"
+                data:
+                    type: object
+                    properties:
+                        accessToken:
+                            type: string
+                        refreshToken:
+                            type: string
+            required:
+                - status
+                - data
+        ValidationError:
+            type: object
+            properties:
+                status:
+                    $ref: "#/components/schemas/Status"
+                error:
+                    type: object
+                    properties:
+                        message:
+                            type: string
+                        code:
+                            type: string
+                        details:
+                            type: array
+                            items:
+                                $ref: "#/components/schemas/ValidationErrorDetail"
+            required:
+                - status
+                - error
+        ValidationErrorDetail:
+            type: object
+            properties:
+                type:
+                    type: string
+                message:
+                    type: string
+                field:
+                    type: string
+                actual:
+                    type: string
+                label:
+                    type: string
+        ErrorUnauthorized:
+            type: object
+            properties:
+                status:
+                    $ref: "#/components/schemas/Status"
+                error:
+                    type: object
+                    properties:
+                        message:
+                            type: string
+                        code:
+                            type: string
+            required:
+                - status
+                - error
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                message:
+                    type: string
