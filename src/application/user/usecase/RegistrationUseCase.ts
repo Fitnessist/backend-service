@@ -37,11 +37,13 @@ export class RegisterUserUseCase {
 
             // Create a new user object
             const newUser: User = {
-                id: "", // Generate a unique ID for the user
+                id: "",
                 username,
                 password: encryptedPassword,
                 email,
-                name
+                name,
+                createdAt: undefined,
+                updatedAt: undefined
             }
 
             // Save the new user to the repository

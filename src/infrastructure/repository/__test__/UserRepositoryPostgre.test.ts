@@ -13,7 +13,9 @@ describe("UserRepositoryPostgre", () => {
         username: "john_doe",
         password: "password",
         email: "john.doe@example.com",
-        name: "John Doe"
+        name: "John Doe",
+        createdAt: undefined,
+        updatedAt: undefined
     }
     const ID = {
         idGenerator: jest.fn()

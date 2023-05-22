@@ -9,7 +9,7 @@ interface ApiResponse {
     error?: {
         message: string
         code: string
-        details?: string[]
+        details?: any[]
     }
 }
 
@@ -35,7 +35,7 @@ export const sendError = (
     statusCode: number,
     message: string,
     errorCode: string,
-    details?: string[]
+    details?: any[]
 ): void => {
     const response: ApiResponse = {
         status: {

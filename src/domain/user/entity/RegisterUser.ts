@@ -1,4 +1,4 @@
-import { validateRegisterUserRequest } from "@domain/validator/UserValidator"
+import { validateSchema } from "@domain/validator/UserValidator"
 
 export interface RegisterUserPayload {
     username: string
@@ -26,6 +26,19 @@ export class RegisterUser {
     }
 
     private _validatePayload (payload: RegisterUserPayload): void {
-        validateRegisterUserRequest(payload)
+        const registerSchema: any = {
+            username: { type: "string", optional: false },
+            name: { type: "string", optional: false },
+            email: { type: "email", optional: false, label: "Email Address" },
+            password: {
+                type: "string",
+                optional: false,
+                min: 8,
+                label: "Password"
+            },
+            passwordConfirmation: { type: "equal", field: "password" }
+        }
+
+        validateSchema(payload, registerSchema)
     }
 }

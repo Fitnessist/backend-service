@@ -7,6 +7,9 @@ import { BcryptPasswordEncryptor } from "@infrastructure/security/BcryptPassword
 import bcrypt from "bcrypt"
 import { AuthController } from "@delivery/http/api/v1/controllers/Auth.controller"
 import { RegisterUserUseCase } from "@application/user/usecase/RegistrationUseCase"
+import { AuthenticationUseCase } from "@application/user/usecase/AuthenticationUseCase"
+import { TokenRepositoryPostgre } from "./repository/TokenRepositoryPostgre"
+import { JwtGenerator } from "./security/JwtGenerator"
 
 const container = createContainer()
 
@@ -33,6 +36,14 @@ container.register([
     }
 ])
 
+// // JWT Service instance
+container.register([
+    {
+        key: "JwtGenerator",
+        Class: JwtGenerator
+    }
+])
+
 // user repository instance
 container.register([
     {
@@ -48,6 +59,21 @@ container.register([
                 },
                 {
                     concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+// token repository instance
+container.register([
+    {
+        key: "TokenRepository",
+        Class: TokenRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
                 }
             ]
         }
@@ -75,6 +101,33 @@ container.register([
     }
 ])
 
+// Auth Use Case instance
+container.register([
+    {
+        key: "AuthenticationUseCase",
+        Class: AuthenticationUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "UserRepository"
+                },
+                {
+                    internal: "TokenRepository"
+                },
+                {
+                    internal: "Logger"
+                },
+                {
+                    internal: "PasswordEncryptionInterface"
+                },
+                {
+                    internal: "JwtGenerator"
+                }
+            ]
+        }
+    }
+])
+
 // Auth controller instance
 container.register([
     {
@@ -87,6 +140,9 @@ container.register([
                 },
                 {
                     internal: "RegisterUserUseCase"
+                },
+                {
+                    internal: "AuthenticationUseCase"
                 }
             ]
         }
