@@ -9,7 +9,6 @@
 - [Usage](#usage)
 - [Testing](#testing)
 - [Contributing](#contributing)
-- [License](#license)
 - [Technologies and Libraries](#technologies-and-libraries)
 
 ## Project Description
@@ -88,19 +87,20 @@ For more details on how to install and use this boilerplate, refer to the [Insta
    $ cd clean-rest-typescript-boilerplate
    ```
 
-2. Build the Docker image:
-
+2. Rename the `.env.example` file to `.env` 
    ```shell
-   $ docker build -t clean-rest-api .
+   $ mv .env.example .env
    ```
 
-3. Run the Docker container:
+3. Open the .env file and fill in the necessary environment variables with your configuration.
+
+4. Build and run the Docker containers:
 
    ```shell
-   $ docker run -p 3000:3000 -d clean-rest-api
+   $ docker-compose up -d
    ```
 
-   This will start the server and make it accessible at `http://localhost:3000`.
+   This will start the server and the PostgreSQL database container.
 
 ## Usage
 
@@ -112,23 +112,21 @@ For more details on how to install and use this boilerplate, refer to the [Insta
    $ npm start
    ```
 
-   This will start the server and make it accessible at `http://localhost:3000`. You can then make API requests using tools like `curl` or `Postman`.
+   This will start the server and make it accessible at `http://localhost:8000`. You can then make API requests using tools like `curl` or `Postman`.
 
 ### With Docker
 
-1. Run the Docker container:
+1. Build and run the Docker container:
 
    ```shell
-   $ docker run -p 3000:3000 -d clean-rest-api
+   $ docker-compose up -d
    ```
 
-   This will start the server and make it accessible at `http://localhost:3000`. You can then make API requests using tools like `curl` or `Postman`.
+   This will start the server and the PostgreSQL database container. The server will be accessible at http://localhost:8000. You can then make API requests using tools like `curl` or `Postman`.
 
 Make sure to choose the appropriate installation method (with or without Docker) based on your preference and requirements. Customize the instructions as needed to match the specific configurations and commands used in your project.
 
 ## Testing
-
-Describe how to run the tests for your project. Provide instructions on installing any testing frameworks or libraries if necessary. Include examples of different test scenarios and expected outcomes.
 
 ```shell
 $ npm test
@@ -138,15 +136,7 @@ This will run the test suite and display the results in the console.
 
 ## Contributing
 
-Explain how others can contribute to your project. Provide guidelines for submitting issues, feature requests, or pull requests. Include information about coding conventions, branch structure, and any other relevant information for contributors.
-
-## License
-
-Specify the license under which your project is distributed. Include a link to the license file if applicable.
-
-```
-MIT License
-```
+We welcome contributions to enhance the functionality and quality of this project. If you would like to contribute, please follow our guidelines for submitting issues, feature requests, or pull requests, and adhere to our coding conventions and branch structure. Together, we can make this project even better!
 
 ## Technologies and Libraries
 
