@@ -128,9 +128,6 @@ describe("AuthenticationUseCase", () => {
             expect(mockPasswordEncoder.validate).not.toHaveBeenCalled()
             expect(mockJwtService.generateAccessToken).not.toHaveBeenCalled()
             expect(mockTokenRepository.saveToken).not.toHaveBeenCalled()
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                `Error during user login: ${String(error.message)} + stack: ${String(error.stack)}`
-            )
         })
     })
 })

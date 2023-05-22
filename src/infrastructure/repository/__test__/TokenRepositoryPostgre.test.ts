@@ -66,7 +66,7 @@ describe("TokenRepositoryPostgre", () => {
             expect(result).toEqual(token)
 
             const expectedQuery: QueryConfig = {
-                text: "SELECT * FROM refresh_tokens WHERE refresh_token = $1",
+                text: "SELECT * FROM refresh_tokens WHERE refresh_token = $1 LIMIT 1",
                 values: [token.refreshToken]
             }
             expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
@@ -88,7 +88,7 @@ describe("TokenRepositoryPostgre", () => {
             expect(result).toBeNull()
 
             const expectedQuery: QueryConfig = {
-                text: "SELECT * FROM refresh_tokens WHERE refresh_token = $1",
+                text: "SELECT * FROM refresh_tokens WHERE refresh_token = $1 LIMIT 1",
                 values: ["unknown-refresh-token"]
             }
             expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
