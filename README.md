@@ -53,6 +53,11 @@ By following the principles of Clean Architecture, this project promotes modular
 
 For more details on how to install and use this boilerplate, refer to the [Installation](#installation) and [Usage](#usage) sections above.
 
+## Prerequesite
+If you don't want to use the Docker. You have to install
+1. [NodeJS ^18.x](https://nodejs.org/en)
+2. [PostgreSQL ^12.x](https://www.postgresql.org/)
+
 ## Installation
 
 ### Without Docker
@@ -78,6 +83,11 @@ For more details on how to install and use this boilerplate, refer to the [Insta
 
 4. Open the `.env` file and fill in the necessary environment variables with your configuration.
 
+5. Run the migrations
+   ```shell
+   $ npm run migrate
+   ```
+
 ### With Docker
 
 1. Clone the repository:
@@ -101,6 +111,16 @@ For more details on how to install and use this boilerplate, refer to the [Insta
    ```
 
    This will start the server and the PostgreSQL database container.
+
+5. Access the container
+   ```shell
+   $ docker exec -it app bash
+   ```
+
+6. Run migration
+   ```shell
+   $ npm run migrate
+   ```
 
 ## Usage
 
