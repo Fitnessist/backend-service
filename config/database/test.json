@@ -1,7 +1,0 @@
-{
-    "user": "postgres",
-    "password": "root",
-    "host": "localhost",
-    "port": 5432,
-    "database": "boilerplate_restfull_api_uses_ts_db"
-}

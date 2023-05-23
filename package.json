@@ -8,7 +8,7 @@
     "build:watch": "npm run build --watch",
     "dev": "nodemon -L --watch ./dist ./dist/src/main/app.js",
     "migrate": "node-pg-migrate",
-    "migrate:test": "node-pg-migrate -f config/database/test.json",
+    "migrate:test": "node-pg-migrate",
     "start": "node dist/src/main/app.js",
     "start:dev": "concurrently --kill-others-on-fail \"npm run build:watch\" \"npm run dev\"",
     "test": "jest --passWithNoTests --runInBand --no-cache",
