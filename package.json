@@ -2,7 +2,7 @@
   "name": "clean-rest-typescript-boilerplate",
   "version": "1.0.0",
   "description": "this repo is a boilerplate for clean architecture of rest api using typescript language",
-  "main": "dist/main/app.js",
+  "main": "dist/src/main/app.js",
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "build:watch": "npm run build --watch",
