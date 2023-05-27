@@ -1,7 +1,8 @@
 import { type Pool, type QueryConfig } from "pg"
 import Workout from "@domain/workout/entity/Workout"
+import { type IWorkoutRepository } from "@domain/workout/repository/IWorkoutRepository"
 
-export default class WorkoutRepositoryPostgre {
+export default class WorkoutRepositoryPostgre implements IWorkoutRepository {
     private readonly pool: Pool
     private readonly idGenerator: any
 

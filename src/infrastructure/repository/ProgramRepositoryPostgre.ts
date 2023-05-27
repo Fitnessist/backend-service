@@ -1,7 +1,8 @@
 import { type Pool, type QueryConfig } from "pg"
 import Program from "@domain/workout/entity/Program"
+import { type IProgramRepository } from "@domain/workout/repository/IProgramRepository"
 
-export class ProgramRepositoryPostgre {
+export class ProgramRepositoryPostgre implements IProgramRepository {
     private readonly pool: Pool
     private readonly idGenerator: any
 
