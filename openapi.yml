@@ -1,6 +1,6 @@
 openapi: "3.0.2"
 info:
-    title: Boilerplate for RESTful API with initials feature
+    title: Fitnessist RESTful API
     version: "1.0"
 servers:
     - url: http://localhost/api
