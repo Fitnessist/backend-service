@@ -99,6 +99,7 @@ module.exports = {
         '^@application/(.*)$': '<rootDir>/application/$1',
         '^@common/(.*)$': '<rootDir>/common/$1',
         '^@delivery/(.*)$': '<rootDir>/delivery/$1',
+        '^@helpers/(.*)$' : '<rootDir>/helpers/$1',
         '^@main/(.*)$': '<rootDir>/main/$1',
         '^@middleware/(.*)$': '<rootDir>/middleware/$1',
         '^@test/(.*)$': '<rootDir>/../test/$1',

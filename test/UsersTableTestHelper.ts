@@ -1,38 +1,24 @@
 /* istanbul ignore file */
 import { type User } from "@domain/user/entity/User"
-import pool from "@infrastructure/database/postgres"
-import { type QueryConfig } from "pg"
+import TableTestHelper from "./TableTestHelper"
 
-export class UsersTableTestHelper {
+export class UsersTableTestHelper extends TableTestHelper {
+    constructor () {
+        super("users")
+    }
+
     public async addUser ({
         id = "user-123",
-        username = "dicoding",
+        username = "username11",
         password = "secret",
-        name = "Dicoding Indonesia"
+        name = "Example User"
     }): Promise<void> {
-        const query = {
-            text: "INSERT INTO users VALUES($1, $2, $3, $4)",
-            values: [id, username, password, name]
-        }
-
-        await pool.query(query)
+        const data = { id, username, password, name }
+        await this.addRow(data)
     }
 
-    public async findUsersById (id: string): Promise<User[] | null> {
-        const query: QueryConfig = {
-            text: "SELECT * FROM users WHERE id = $1",
-            values: [id]
-        }
-
-        const result = await pool.query(query)
-        return result.rows
-    }
-
-    public async cleanTable (): Promise<void> {
-        await pool.query("DELETE FROM users")
-    }
-
-    public async closePool (): Promise<void> {
-        await pool.end()
+    public async findUsersById (id: string): Promise<User | null> {
+        const user = await this.findRowsById(id)
+        return user
     }
 }

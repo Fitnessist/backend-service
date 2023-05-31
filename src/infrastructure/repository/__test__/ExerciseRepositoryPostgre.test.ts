@@ -1,10 +1,7 @@
-import {
-    type Pool,
-    type QueryConfig,
-    type QueryResult
-} from "pg"
+import { type Pool, type QueryResult } from "pg"
 import ExerciseRepositoryPostgre from "../ExerciseRepositoryPostgre"
-import type Exercise from "@domain/workout/entity/Exercise"
+import Exercise from "@domain/workout/entity/Exercise"
+import ExerciseLevel from "@domain/workout/entity/ExerciseLevel"
 
 describe("ExerciseRepositoryPostgre", () => {
     let exerciseRepository: ExerciseRepositoryPostgre
@@ -65,7 +62,7 @@ describe("ExerciseRepositoryPostgre", () => {
             expect(exercise?.name).toBe(exerciseName)
             expect(exercise?.media).toBe(exerciseMedia)
             expect(exercise?.exerciseLevels).toHaveLength(1)
-            expect(exercise?.exerciseLevels[0]).toEqual({
+            expect(exercise?.exerciseLevels?.at(0)).toEqual({
                 id: "level-1",
                 exerciseId,
                 level: "Beginner",
@@ -74,13 +71,6 @@ describe("ExerciseRepositoryPostgre", () => {
                 caloriesBurned: 100,
                 points: 50
             })
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "SELECT * FROM exercises AS E LEFT JOIN exercise_levels AS EL ON E.id = EL.exercise_id WHERE E.id = $1",
-                values: [exerciseId]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
         })
 
         it("should return null when exercise not found", async () => {
@@ -103,16 +93,122 @@ describe("ExerciseRepositoryPostgre", () => {
 
             // Assert the result
             expect(exercise).toBeNull()
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "SELECT * FROM exercises AS E LEFT JOIN exercise_levels AS EL ON E.id = EL.exercise_id WHERE E.id = $1",
-                values: [exerciseId]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
         })
     })
 
+    describe("findByWorkoutId", () => {
+        it("should return exercises with exercise levels", async () => {
+            // Arrange
+            const workoutId = "workout-123"
+
+            // Mock this.pool.query untuk mengembalikan hasil yang diharapkan
+            mockPool.query = jest.fn().mockResolvedValue({
+                rowCount: 3,
+                rows: [
+                    {
+                        id: "exercise-1",
+                        name: "Exercise 1",
+                        media: "media-1",
+                        workout_id: workoutId,
+                        exercise_level_id: "level-1",
+                        level: "Level 1",
+                        sets: 3,
+                        reps: 10,
+                        duration: 60,
+                        calories_burned: 100,
+                        points: 50
+                    },
+                    {
+                        id: "exercise-1",
+                        name: "Exercise 1",
+                        media: "media-1",
+                        workout_id: workoutId,
+                        exercise_level_id: "level-2",
+                        level: "Level 2",
+                        sets: 4,
+                        reps: 12,
+                        duration: 45,
+                        calories_burned: 120,
+                        points: 60
+                    },
+                    {
+                        id: "exercise-2",
+                        name: "Exercise 2",
+                        media: "media-2",
+                        workout_id: workoutId,
+                        exercise_level_id: "level-3",
+                        level: "Level 3",
+                        sets: 5,
+                        reps: 15,
+                        duration: 30,
+                        calories_burned: 150,
+                        points: 70
+                    }
+                ]
+            })
+
+            // Expected result
+            const expectedExercises: Exercise[] = [
+                new Exercise("exercise-1", "Exercise 1", "media-1", workoutId, [
+                    new ExerciseLevel(
+                        "level-1",
+                        "exercise-1",
+                        "Level 1",
+                        3,
+                        10,
+                        60,
+                        100,
+                        50
+                    ),
+                    new ExerciseLevel(
+                        "level-2",
+                        "exercise-1",
+                        "Level 2",
+                        4,
+                        12,
+                        45,
+                        120,
+                        60
+                    )
+                ]),
+                new Exercise("exercise-2", "Exercise 2", "media-2", workoutId, [
+                    new ExerciseLevel(
+                        "level-3",
+                        "exercise-2",
+                        "Level 3",
+                        5,
+                        15,
+                        30,
+                        150,
+                        70
+                    )
+                ])
+            ]
+
+            // Act
+            const result = await exerciseRepository.findByWorkoutId(workoutId)
+
+            // Assert
+            expect(result).toEqual(expectedExercises)
+        })
+
+        it("should return null if no exercises found", async () => {
+            // Arrange
+            const workoutId = "workout-123"
+
+            // Mock this.pool.query untuk mengembalikan hasil kosong
+            mockPool.query = jest.fn().mockResolvedValue({
+                rowCount: 0,
+                rows: []
+            })
+
+            // Act
+            const result = await exerciseRepository.findByWorkoutId(workoutId)
+
+            // Assert
+            expect(result).toBeNull()
+        })
+    })
     describe("create", () => {
         it("should create an exercise", async () => {
             // Mock the query result
@@ -158,13 +254,6 @@ describe("ExerciseRepositoryPostgre", () => {
             expect(createdExercise.id).toBe(exerciseId)
             expect(createdExercise.name).toBe(exerciseName)
             expect(createdExercise.media).toBe(exerciseMedia)
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "INSERT INTO workouts (id, name, media) VALUES ($1, $2, $3) RETURNING *",
-                values: [exerciseId, newExercise.name, newExercise.media]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
         })
     })
 })

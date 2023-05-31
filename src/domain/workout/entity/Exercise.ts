@@ -4,13 +4,15 @@ class Exercise {
     public id: string
     public name: string
     public media: string
-    public exerciseLevels: ExerciseLevel[]
+    public workoutId?: string
+    public exerciseLevels: ExerciseLevel[] = []
 
-    constructor (id: string, name: string, media: string, exerciseLevels: ExerciseLevel[]) {
+    constructor (id: string, name: string, media: string, workoutId?: string, exerciseLevels?: ExerciseLevel[]) {
         this.id = id
         this.name = name
         this.media = media
-        this.exerciseLevels = exerciseLevels
+        this.workoutId = workoutId
+        this.exerciseLevels = exerciseLevels ?? []
     }
 }
 

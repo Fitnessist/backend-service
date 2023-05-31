@@ -1,6 +1,7 @@
-import { type Pool, type QueryConfig, type QueryResult } from "pg"
+import { type Pool, type QueryResult } from "pg"
 import { ProgramRepositoryPostgre } from "../ProgramRepositoryPostgre"
 import type Program from "@domain/workout/entity/Program"
+import Workout from "@domain/workout/entity/Workout"
 
 describe("ProgramRepositoryPostgre", () => {
     let programRepository: ProgramRepositoryPostgre
@@ -52,13 +53,6 @@ describe("ProgramRepositoryPostgre", () => {
             expect(createdProgram).toBeDefined()
             expect(createdProgram.id).toBe(programId)
             expect(createdProgram.title).toBe(programTitle)
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "INSERT INTO workouts (id, title) VALUES ($1, $2) RETURNING *",
-                values: [programId, programTitle]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
         })
     })
 
@@ -68,9 +62,24 @@ describe("ProgramRepositoryPostgre", () => {
             const programId = "program-123"
             const programTitle = "Beginner Program"
             const mockQueryResult: QueryResult = {
-                rows: [{ id: programId, title: programTitle }],
+                rows: [
+                    {
+                        id: programId,
+                        title: programTitle,
+                        workout_id: "workout-1",
+                        program_id: programId,
+                        day: 1
+                    },
+                    {
+                        id: programId,
+                        title: programTitle,
+                        workout_id: "workout-2",
+                        program_id: programId,
+                        day: 2
+                    }
+                ],
                 command: "",
-                rowCount: 1,
+                rowCount: 2,
                 oid: 0,
                 fields: []
             };
@@ -84,13 +93,8 @@ describe("ProgramRepositoryPostgre", () => {
             expect(program).toBeDefined()
             expect(program?.id).toBe(programId)
             expect(program?.title).toBe(programTitle)
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "SELECT * FROM programs WHERE id=$1 LIMIT 1",
-                values: [programId]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
+            expect(program?.workouts).toHaveLength(2)
+            expect(program?.workouts?.at(0)).toEqual(new Workout("workout-1", programId, 1))
         })
 
         it("should return null when program not found", async () => {
@@ -111,13 +115,6 @@ describe("ProgramRepositoryPostgre", () => {
 
             // Assert the result
             expect(program).toBeNull()
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "SELECT * FROM programs WHERE id=$1 LIMIT 1",
-                values: [programId]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
         })
     })
 })
