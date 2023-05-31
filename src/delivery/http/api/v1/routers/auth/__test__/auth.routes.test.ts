@@ -10,6 +10,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
+    await userTable.cleanTable()
     server.closeServer()
     await userTable.closePool()
 })

@@ -104,15 +104,15 @@ class ErrorHandler {
     ): void {
         const response: ErrorResponse = {
             status: {
-                code: err.statusCode,
+                code: err.statusCode ?? 500,
                 message: "Internal Server Error"
             },
             error: {
                 message: err.message,
-                code: err.errorCode
+                code: err.errorCode ?? "INTERNAL_SERVER_ERROR"
             }
         }
-        res.status(err.statusCode).json(response)
+        res.status(err.statusCode ?? 500).json(response)
     }
 
     public handleServiceUnavailableException (

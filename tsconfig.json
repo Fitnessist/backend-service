@@ -34,6 +34,7 @@
             "@common/*": ["common/*"],
             "@delivery/*": ["delivery/*"],
             "@domain/*": ["domain/*"],
+            "@helpers/*" : ["helpers/*"],
             "@infrastructure/*": ["infrastructure/*"],
             "@main/*": ["main/*"],
             "@middleware/*": ["middleware/*"],

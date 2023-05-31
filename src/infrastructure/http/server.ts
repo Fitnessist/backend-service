@@ -10,6 +10,7 @@ import { InternalServerErrorException } from "@common/exceptions/InternalServerE
 import { ServiceUnavailableException } from "@common/exceptions/ServiceUnavailableException"
 import { type Logger } from "@infrastructure/log/Logger"
 import http, { type Server as HTTPServer } from "http"
+import morgan from "morgan"
 
 export default class Server {
     private readonly app: express.Application
@@ -24,6 +25,7 @@ export default class Server {
         this.logger = logger
         this.port = port
         this.app.use(bodyParser.json())
+        this.app.use(morgan("combined"))
         this.errorHandler = new ErrorHandler()
     }
 
@@ -48,7 +50,8 @@ export default class Server {
             } else if (err instanceof ServiceUnavailableException) {
                 this.errorHandler.handleServiceUnavailableException(err, req, res, next)
             } else {
-                //
+                this.logger.error(String(err?.stack))
+                this.errorHandler.handleInternalServerErrorException(err, req, res, next)
             }
         })
     }

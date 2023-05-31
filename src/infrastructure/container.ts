@@ -9,7 +9,13 @@ import { AuthController } from "@delivery/http/api/v1/controllers/Auth.controlle
 import { RegisterUserUseCase } from "@application/user/usecase/RegistrationUseCase"
 import { AuthenticationUseCase } from "@application/user/usecase/AuthenticationUseCase"
 import { TokenRepositoryPostgre } from "./repository/TokenRepositoryPostgre"
+import { ProgramRepositoryPostgre } from "@infrastructure/repository/ProgramRepositoryPostgre"
 import { JwtGenerator } from "./security/JwtGenerator"
+import ProgramUseCase from "@application/workout/usecase/ProgramUseCase"
+import WorkoutRepositoryPostgre from "./repository/WorkoutRepositoryPostgre"
+import WorkoutUseCase from "@application/workout/usecase/WorkoutUseCase"
+import ExerciseUseCase from "@application/workout/usecase/ExerciseUseCase"
+import ExerciseRepositoryPostgre from "./repository/ExerciseRepositoryPostgre"
 
 const container = createContainer()
 
@@ -143,6 +149,106 @@ container.register([
                 },
                 {
                     internal: "AuthenticationUseCase"
+                }
+            ]
+        }
+    }
+])
+
+// register ProgramRepository
+container.register([
+    {
+        key: "ProgramRepository",
+        Class: ProgramRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "WorkoutRepository",
+        Class: WorkoutRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "ExerciseRepository",
+        Class: ExerciseRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "ProgramUseCase",
+        Class: ProgramUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "ProgramRepository"
+                },
+                {
+                    internal: "Logger"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "WorkoutUseCase",
+        Class: WorkoutUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "Logger"
+                },
+                {
+                    internal: "WorkoutRepository"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "ExerciseUseCase",
+        Class: ExerciseUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "ExerciseRepository"
                 }
             ]
         }
