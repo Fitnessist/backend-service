@@ -101,6 +101,8 @@ $ npm test
 
 This will run the test suite and display the results in the console.
 
+## Documentation
+- [Postman Documentation](https://documenter.getpostman.com/view/16615700/2s93m7WM7a)
 
 ## Technologies and Libraries
 
