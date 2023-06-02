@@ -10,7 +10,7 @@ import pool from "@infrastructure/database/postgres"
 import container from "@infrastructure/container"
 import { type Logger } from "@infrastructure/log/Logger"
 
-const port = Number(process.env.PORT ?? 8000)
+const port = Number(process.env.APP_PORT ?? 8000)
 const logger = container.getInstance("Logger") as Logger
 const server = new Server(port, logger)
 server.registerRoutes(apiRouter)
