@@ -30,7 +30,7 @@ steps:
       args:
           - "build"
           - "-t"
-          - "gcr.io/$GOOGLE_CLOUD_PROJECT/fitnessist-image"
+          - "gcr.io/$PROJECT_ID/fitnessist-image"
           - "."
 
     - name: "gcr.io/cloud-builders/gcloud"
