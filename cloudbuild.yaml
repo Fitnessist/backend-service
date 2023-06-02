@@ -9,7 +9,7 @@ steps:
       args: ["install"]
 
     - name: "gcr.io/cloud-builders/npm"
-      args: ["run", "test"]
+      args: ["run", "test:unit"]
 
       # Langkah 2: Mendapatkan nilai dari Secret Manager
     - name: "gcr.io/cloud-builders/gcloud"
