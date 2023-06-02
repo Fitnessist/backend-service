@@ -26,6 +26,7 @@ steps:
     - name: "gcr.io/cloud-builders/docker"
       env:
         - "APP_HOST=http://localhost"
+        - "APP_PORT=8000"
       args:
           - "build"
           - "--build-arg"
