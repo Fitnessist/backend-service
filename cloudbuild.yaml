@@ -22,16 +22,6 @@ steps:
           - '--format="get(payload.data)"'
           - ">>"
           - "database-password.txt"
-    - name: "gcr.io/cloud-builders/gcloud"
-      args:
-          - "run"
-          - "services"
-          - "describe"
-          - "fitnessist-staging"
-          - "--region=asia-southeast2"
-          - "--format=value(status.url)"
-          - ">>"
-          - "service-url.txt"
 
     - name: "gcr.io/cloud-builders/docker"
       args:
@@ -63,10 +53,7 @@ steps:
           - "--allow-unauthenticated"
           - "--memory=256Mi"
           - "--timeout=60s"
-          - "--set-env-vars=APP_HOST=$(cat service-url.txt),APP_PORT=$APP_PORT,DATABASE_HOST=$DATABASE_HOST,DATABASE_USER=$DATABASE_USER,DATABASE_PORT=$DATABASE_PORT,DATABASE_NAME=$DATABASE_NAME"
-
-substitutions:
-    _get_service_url: "gcloud run services describe fitnessist-staging --region=asia-southeast2 --format=value(status.url)"
+          - "--set-env-vars=APP_HOST=$APP_HOST,APP_PORT=$APP_PORT,DATABASE_HOST=$DATABASE_HOST,DATABASE_USER=$DATABASE_USER,DATABASE_PORT=$DATABASE_PORT,DATABASE_NAME=$DATABASE_NAME"
 
 images:
     - "gcr.io/$PROJECT_ID/fitnessist-image"
