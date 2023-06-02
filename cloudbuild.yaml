@@ -12,15 +12,9 @@ steps:
       args: ["run", "test:unit"]
 
       # Langkah 2: Mendapatkan nilai dari Secret Manager
-    - name: "gcr.io/cloud-builders/gcloud"
-      entrypoint: "bash"
-      args:
-      - "-c"
-      - |
-        SECRET_VALUE=$(gcloud secrets versions access latest --secret=fitnessist_db_password --format='value(payload.data)' | base64 -d)
-        echo "$SECRET_VALUE" > database-password.txt
 
     - name: "gcr.io/cloud-builders/docker"
+      secretEnv: ['DATABASE_PASSWORD']
       args:
           - "build"
           - "--build-arg"
@@ -33,6 +27,8 @@ steps:
           - "DATABASE_HOST=$_DATABASE_HOST"
           - "--build-arg"
           - "DATABASE_USER=$_DATABASE_USER"
+          - "--build-arg"
+          - "DATABASE_PASSWORD=$$DATABASE_PASSWORD"
           - "-t"
           - "gcr.io/$PROJECT_ID/fitnessist-image"
           - "."
@@ -49,6 +45,11 @@ steps:
           - "--memory=256Mi"
           - "--timeout=60s"
           - "--set-env-vars=APP_HOST=http://localhost,APP_PORT=$_APP_PORT,DATABASE_HOST=$_DATABASE_HOST,DATABASE_USER=$_DATABASE_USER,DATABASE_PORT=$_DATABASE_PORT,DATABASE_NAME=$_DATABASE_NAME"
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/$PROJECT_ID/secrets/fitnessist_db_password/versions/latest
+    env: 'DATABASE_PASSWORD'
 
 images:
     - "gcr.io/$PROJECT_ID/fitnessist-image"
