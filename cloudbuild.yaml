@@ -30,7 +30,7 @@ steps:
       args:
           - "build"
           - "--build-arg"
-          - "APP_HOST=$APP_HOST"
+          - "APP_HOST=$$APP_HOST"
           - "--build-arg"
           - "APP_PORT=$APP_PORT"
           - "--build-arg"
