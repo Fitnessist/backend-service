@@ -24,12 +24,14 @@ steps:
           - "database-password.txt"
 
     - name: "gcr.io/cloud-builders/docker"
+      env:
+        - "APP_HOST=http://localhost"
       args:
           - "build"
           - "--build-arg"
           - "APP_HOST=$APP_HOST"
           - "--build-arg"
-          - "APP_PORT=8000"
+          - "APP_PORT=$APP_PORT"
           - "--build-arg"
           - "DATABASE_NAME=$DATABASE_NAME"
           - "--build-arg"
