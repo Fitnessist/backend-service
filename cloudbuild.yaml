@@ -13,15 +13,12 @@ steps:
 
       # Langkah 2: Mendapatkan nilai dari Secret Manager
     - name: "gcr.io/cloud-builders/gcloud"
+      entrypoint: "bash"
       args:
-          - "secrets"
-          - "versions"
-          - "access"
-          - "latest"
-          - "--secret=fitnessist_db_password"
-          - '--format="get(payload.data)"'
-          - ">>"
-          - "database-password.txt"
+          - "-c"
+          - |
+              SECRET_VALUE=$(gcloud secrets versions access latest --secret=fitnessist_db_password --format='value(payload.data)' | base64 -d)
+              echo "$SECRET_VALUE" > database-password.txt
 
     - name: "gcr.io/cloud-builders/docker"
       args:
