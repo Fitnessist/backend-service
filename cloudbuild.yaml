@@ -1,3 +1,8 @@
+serviceAccount: ci-cd-cloud-run-invoker@fitnessist-capstone-project.iam.gserviceaccount.com
+
+options:
+    logging: CLOUD_LOGGING_ONLY
+
 steps:
     # Langkah 1: Menginstal dependensi
     - name: "gcr.io/cloud-builders/npm"
@@ -51,7 +56,7 @@ steps:
           - "--set-env-vars=APP_HOST=$$(_get_service_url),APP_PORT=$APP_PORT,DATABASE_HOST=$DATABASE_HOST,DATABASE_USER=$DATABASE_USER,DATABASE_PORT=$DATABASE_PORT,DATABASE_NAME=$DATABASE_NAME"
 
 substitutions:
-  _get_service_url: 'gcloud run services describe fitnessist-staging --region=asia-southeast2 --format=value(status.url)'
+    _get_service_url: "gcloud run services describe fitnessist-staging --region=asia-southeast2 --format=value(status.url)"
 
 images:
     - "gcr.io/$PROJECT_ID/fitnessist-image"
