@@ -30,7 +30,7 @@ steps:
       args:
           - "build"
           - "--build-arg"
-          - "APP_HOST=$$APP_HOST"
+          - "APP_HOST=http://localhost"
           - "--build-arg"
           - "APP_PORT=$APP_PORT"
           - "--build-arg"
@@ -56,7 +56,7 @@ steps:
           - "--allow-unauthenticated"
           - "--memory=256Mi"
           - "--timeout=60s"
-          - "--set-env-vars=APP_HOST=$APP_HOST,APP_PORT=$APP_PORT,DATABASE_HOST=$DATABASE_HOST,DATABASE_USER=$DATABASE_USER,DATABASE_PORT=$DATABASE_PORT,DATABASE_NAME=$DATABASE_NAME"
+          - "--set-env-vars=APP_HOST=http://localhost,APP_PORT=$APP_PORT,DATABASE_HOST=$DATABASE_HOST,DATABASE_USER=$DATABASE_USER,DATABASE_PORT=$DATABASE_PORT,DATABASE_NAME=$DATABASE_NAME"
 
 images:
     - "gcr.io/$PROJECT_ID/fitnessist-image"
