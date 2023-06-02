@@ -37,8 +37,6 @@ steps:
           - "gcr.io/$GOOGLE_CLOUD_PROJECT/fitnessist-image"
           - "."
 
-# Pemicu manual untuk deploy ke staging
-manual_steps:
     - name: "gcr.io/cloud-builders/gcloud"
       args:
           - "run"
@@ -50,33 +48,10 @@ manual_steps:
           - "--allow-unauthenticated"
           - "--memory=256Mi"
           - "--timeout=60s"
-          - "--set-env-vars=APP_HOST=$$(_get_service_url)"
+          - "--set-env-vars=APP_HOST=$$(_get_service_url),APP_PORT=$APP_PORT,DATABASE_HOST=$DATABASE_HOST,DATABASE_USER=$DATABASE_USER,DATABASE_PORT=$DATABASE_PORT,DATABASE_NAME=$DATABASE_NAME"
 
-# Pemicu manual untuk deploy ke produksi
-trigger:
-    manual: {}
-    substitutions:
-        _get_service_url: "gcloud run services describe fitnessist-staging --region=asia-southeast2 --format=value(status.url)"
-    steps:
-        - name: "gcr.io/cloud-builders/gcloud"
-          args:
-              - "run"
-              - "deploy"
-              - "fitnessist-production-service"
-              - "--image=gcr.io/$PROJECT_ID/fitnessist-image"
-              - "--region=asia-southeast2"
-              - "--platform=managed"
-              - "--allow-unauthenticated"
-              - "--memory=512Mi"
-              - "--timeout=60s"
-              - "--service-account=$SERVICE_ACCOUNT_EMAIL"
-          id: "deploy-to-production"
-          entrypoint: "bash"
-    args:
-        - "-c"
-        - |
-            if [[ "$$BUILD_TRIGGER_NAME" == "manual" ]]; then
-              gcloud run services update-traffic fitnessist-production-service --region=asia-southeast2 --to-latest --platform=managed
-            fi
+substitutions:
+  _get_service_url: 'gcloud run services describe fitnessist-staging --region=asia-southeast2 --format=value(status.url)'
+
 images:
     - "gcr.io/$PROJECT_ID/fitnessist-image"
