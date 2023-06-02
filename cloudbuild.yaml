@@ -31,12 +31,16 @@ steps:
           - "gcr.io/$PROJECT_ID/fitnessist-image"
           - "."
 
-      # Langkah 4: Menerbitkan gambar ke Container Registry
-    - name: "gcr.io/cloud-builders/docker"
+    - name: "gcr.io/cloud-builders/gcloud"
       args:
-          - "push"
-          - "gcr.io/$PROJECT_ID/fitnessist-image"
-      timeout: 600s
+          - "auth"
+          - "configure-docker"
+    - name: "gcr.io/cloud-builders/gcloud"
+      args:
+          - "builds"
+          - "submit"
+          - "--tag=gcr.io/$PROJECT_ID/fitnessist-image"
+          - "."
 
     - name: "gcr.io/cloud-builders/gcloud"
       secretEnv: ["DATABASE_PASSWORD"]
