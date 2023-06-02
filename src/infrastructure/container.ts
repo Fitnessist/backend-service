@@ -16,6 +16,10 @@ import WorkoutRepositoryPostgre from "./repository/WorkoutRepositoryPostgre"
 import WorkoutUseCase from "@application/workout/usecase/WorkoutUseCase"
 import ExerciseUseCase from "@application/workout/usecase/ExerciseUseCase"
 import ExerciseRepositoryPostgre from "./repository/ExerciseRepositoryPostgre"
+import { MyProgressRepositoryImpl } from "./repository/MyProgressRepositoryPostgre"
+import { MyExerciseProgressUseCase } from "@application/usecase/my_progress/MyExerciseProgressUseCase"
+import { MyExerciseProgressController } from "@delivery/http/api/v1/controllers/ProgramWorkout/MyExerciseProgressController"
+import { ExerciseLevelRepositoryPostgre } from "./repository/ExerciseLevelRepositoryPostgre"
 
 const container = createContainer()
 
@@ -249,6 +253,80 @@ container.register([
             dependencies: [
                 {
                     internal: "ExerciseRepository"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "MyProgressRepository",
+        Class: MyProgressRepositoryImpl,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "ExerciseLevelRepository",
+        Class: ExerciseLevelRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "MyExerciseProgressUseCase",
+        Class: MyExerciseProgressUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "MyProgressRepository"
+                },
+                {
+                    internal: "UserRepository"
+                },
+                {
+                    internal: "WorkoutRepository"
+                },
+                {
+                    internal: "ExerciseLevelRepository"
+                },
+                {
+                    internal: "Logger"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "MyExerciseProgressController",
+        Class: MyExerciseProgressController,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "MyExerciseProgressUseCase"
                 }
             ]
         }

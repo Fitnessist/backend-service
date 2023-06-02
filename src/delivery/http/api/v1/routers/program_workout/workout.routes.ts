@@ -7,7 +7,7 @@ const workoutRouter = express.Router()
 
 const workoutController = new WorkoutController(container.getInstance("WorkoutUseCase") as WorkoutUseCase)
 
-workoutRouter.get("/workouts/:workoutId", workoutController.getWorkoutById)
-workoutRouter.get("/workouts", workoutController.getAllWorkouts) // cotoh optional query: ?programId=12&page=2&perPage=5
+workoutRouter.get("/:workoutId", workoutController.getWorkoutById)
+workoutRouter.get("/", workoutController.getAllWorkouts) // cotoh optional query: ?programId=12&page=2&perPage=5
 
 export default workoutRouter
