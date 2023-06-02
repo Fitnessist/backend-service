@@ -24,11 +24,18 @@ steps:
           - "database-password.txt"
 
     - name: "gcr.io/cloud-builders/docker"
-      env:
-        - "APP_HOST=http://localhost"
-        - "APP_PORT=8000"
       args:
           - "build"
+          - "--build-arg"
+          - "APP_HOST=$_APP_HOST"
+          - "--build-arg"
+          - "APP_PORT=$_APP_PORT"
+          - "--build-arg"
+          - "DATABASE_NAME=$_DATABASE_NAME"
+          - "--build-arg"
+          - "DATABASE_HOST=$_DATABASE_HOST"
+          - "--build-arg"
+          - "DATABASE_USER=$_DATABASE_USER"
           - "-t"
           - "gcr.io/$PROJECT_ID/fitnessist-image"
           - "."
