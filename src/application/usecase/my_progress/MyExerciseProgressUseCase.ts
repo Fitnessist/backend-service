@@ -1,5 +1,7 @@
+import { NotFoundException } from "@common/exceptions/NotFoundException"
 import { ValidationException } from "@common/exceptions/ValidationException"
 import { type MyExerciseProgressDTO } from "@domain/my_progress/dto/MyExerciseProgressDTO"
+import { MyExerciseProgressResponseDTO } from "@domain/my_progress/dto/MyExerciseProgressResponseDTO"
 import { MyExerciseProgress } from "@domain/my_progress/entity/MyExerciseProgress"
 import { type MyProgressRepository } from "@domain/my_progress/repository/MyProgressRepository"
 import { type UserRepository } from "@domain/user/repository/UserRepository"
@@ -28,14 +30,19 @@ export class MyExerciseProgressUseCase {
         this.logger = logger
     }
 
-    public async findByUser (
-        userId: string
-    ): Promise<MyExerciseProgress[] | null> {
+    public async findByUser (userId: string): Promise<MyExerciseProgressResponseDTO[]> {
         try {
             const myProgressList = await this.myProgressRepository.findByUserId(
                 userId
             )
-            return myProgressList
+            if (myProgressList == null || myProgressList.length <= 0) {
+                throw new NotFoundException()
+            }
+            const response = myProgressList.map((data) => {
+                return new MyExerciseProgressResponseDTO({ ...data })
+            })
+
+            return response
         } catch (error) {
             // Handle any errors that occurred during the process
             console.error(
@@ -64,9 +71,15 @@ export class MyExerciseProgressUseCase {
                 myProgressDTO.workoutId
             )
 
-            const exerciseLevelPromise = this.exerciseLvlRepo.findById(myProgressDTO.exerciseLevelId)
+            const exerciseLevelPromise = this.exerciseLvlRepo.findById(
+                myProgressDTO.exerciseLevelId
+            )
 
-            const [user, workout, exericseLevel] = await Promise.all([userPromise, workoutPromise, exerciseLevelPromise])
+            const [user, workout, exericseLevel] = await Promise.all([
+                userPromise,
+                workoutPromise,
+                exerciseLevelPromise
+            ])
 
             const errors = []
             if (user == null) {

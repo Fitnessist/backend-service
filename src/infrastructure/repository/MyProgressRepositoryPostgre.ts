@@ -40,7 +40,7 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
               EL.sets,
               EL.calories_burned,
               EL.points
-            FROM my_progress P
+            FROM my_exercise_progress P
             JOIN users U ON U.id = P.user_id
             JOIN workouts W ON W.id = P.workout_id
             JOIN exercises E ON E.id = P.exercise_id
@@ -53,15 +53,24 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
         try {
             const queryResult = await this.pool.query(q)
             const rows = queryResult.rows
+            console.log("row", rows, "rows count", queryResult.rowCount)
 
             // Mapping hasil query ke objek MyExerciseProgress
-            const myProgressList = rows.map((row) => {
-                const myProgress = MyExerciseProgress.builder()
-                    .setId(row.id)
-                    .setExerciseId(row.exercise_id)
-                    .setExerciseLevelId(row.exercise_level_id)
-                    .setProgramId(row.program_id)
-                    .setWorkoutId(row.workout_id)
+            const myProgressListMap = new Map<string, MyExerciseProgress>()
+
+            rows.forEach((row) => {
+                let myProgress = myProgressListMap.get(row.progress_id)
+
+                if (myProgress == null || myProgress === undefined) {
+                    myProgress = MyExerciseProgress.builder()
+                        .setId(row.prograss_id)
+                        .setExerciseId(row.exercise_id)
+                        .setExerciseLevelId(row.exercise_level_id)
+                        .setProgramId(row.program_id)
+                        .setWorkoutId(row.workout_id)
+                        .build()
+                    myProgressListMap.set(row.id, myProgress)
+                }
 
                 // Mapping data terkait dari tabel-tabel lain
                 const user = new User(
@@ -93,16 +102,17 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
                 )
 
                 // Set data terkait pada MyExerciseProgress
-                myProgress.setUser(user)
-                myProgress.setWorkout(workout)
-                myProgress.setExercise(exercise)
-                myProgress.setExerciseLevel(exerciseLevel)
-                const progress = myProgress.build()
-
-                return progress
+                myProgress.user = user
+                myProgress.workout = workout
+                myProgress.exercise = exercise
+                myProgress.exerciseLevel = exerciseLevel
             })
-
-            return myProgressList
+            console.log("my progres list map", myProgressListMap)
+            const data: MyExerciseProgress[] = Array.from(
+                myProgressListMap.values()
+            )
+            console.log("data", data)
+            return data
         } catch (error) {
             console.error("Error executing query:", error)
             throw error
@@ -123,7 +133,7 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
     ): Promise<MyExerciseProgress> {
         const q: QueryConfig = {
             text: `
-            INSERT INTO my_progress (id, user_id, program_id, workout_id, exercise_id, exercise_level_id)
+            INSERT INTO my_exercise_progress (id, user_id, program_id, workout_id, exercise_id, exercise_level_id)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *
           `,
@@ -160,7 +170,7 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
     ): Promise<MyExerciseProgress> {
         const q: QueryConfig = {
             text: `
-            UPDATE my_progress
+            UPDATE my_exercise_progress
             SET user_id = $2, program_id = $3, workout_id = $4, exercise_id = $5, exercise_level_id = $6
             WHERE id = $1
             RETURNING *

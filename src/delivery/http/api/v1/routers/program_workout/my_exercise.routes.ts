@@ -9,7 +9,7 @@ const exerciseUC = container.getInstance(
 ) as MyExerciseProgressUseCase
 const controller = new MyExerciseProgressController(exerciseUC)
 
-router.get("/:myProgressId", controller.findByUser)
+router.get("/:userId", controller.findByUser)
 router.post("/", controller.create)
 
 export default router
