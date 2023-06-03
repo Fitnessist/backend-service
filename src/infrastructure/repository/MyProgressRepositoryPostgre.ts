@@ -53,7 +53,6 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
         try {
             const queryResult = await this.pool.query(q)
             const rows = queryResult.rows
-            console.log("row", rows, "rows count", queryResult.rowCount)
 
             // Mapping hasil query ke objek MyExerciseProgress
             const myProgressListMap = new Map<string, MyExerciseProgress>()
@@ -107,11 +106,9 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
                 myProgress.exercise = exercise
                 myProgress.exerciseLevel = exerciseLevel
             })
-            console.log("my progres list map", myProgressListMap)
             const data: MyExerciseProgress[] = Array.from(
                 myProgressListMap.values()
             )
-            console.log("data", data)
             return data
         } catch (error) {
             console.error("Error executing query:", error)
