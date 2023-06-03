@@ -2,19 +2,21 @@
   "name": "clean-rest-typescript-boilerplate",
   "version": "1.0.0",
   "description": "this repo is a boilerplate for clean architecture of rest api using typescript language",
-  "main": "dist/src/main/app.js",
+  "main": "dist/main/app.js",
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "build:watch": "npm run build --watch",
-    "dev": "nodemon -L --watch ./dist ./dist/src/main/app.js",
+    "dev": "nodemon -L --watch ./dist ./dist/main/app.js",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate",
-    "start": "node dist/src/main/app.js",
+    "start": "node dist/main/app.js",
     "start:dev": "concurrently --kill-others-on-fail \"npm run build:watch\" \"npm run dev\"",
-    "test": "jest --passWithNoTests --runInBand --no-cache",
+    "test:unit": "jest --testMatch=**/__test__/*.test.ts --passWithNoTests --runInBand --no-cache",
+    "test:e2e": "jest --testMatch=**/e2e/**/*.test.ts --passWithNoTests  --runInBand --no-cache",
+    "test:all": "jest --passWithNoTests  --runInBand --no-cache",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
-    "test:staged": "npm run test --findRelatedTests",
-    "test:ci": "npm run test -- --coverage",
+    "test:staged": "npm run test:unit --findRelatedTests",
+    "test:ci": "npm run test:unit -- --coverage",
     "lint": "eslint --ext .ts --fix --ignore-path .gitignore ./",
     "prepare": "husky install"
   },
@@ -82,14 +84,14 @@
     "winston": "^3.8.2"
   },
   "_moduleAliases": {
-    "@application": "dist/src/application",
-    "@common": "dist/src/common",
-    "@domain": "dist/src/domain",
-    "@delivery": "dist/src/delivery",
-    "@helpers": "dist/src/helpers",
-    "@infrastructure": "dist/src/infrastructure",
-    "@main": "dist/src/main",
-    "@middleware": "dist/src/middleware"
+    "@application": "dist/application",
+    "@common": "dist/common",
+    "@domain": "dist/domain",
+    "@delivery": "dist/delivery",
+    "@helpers": "dist/helpers",
+    "@infrastructure": "dist/infrastructure",
+    "@main": "dist/main",
+    "@middleware": "dist/middleware"
   },
   "engines": {
     "node": "18.x"

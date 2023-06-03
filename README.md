@@ -1,57 +1,4 @@
-# Clean RESTful API TypeScript Boilerplate
-
-## Table of Contents
-
-- [Project Description](#project-description)
-- [Clean Architecture](#clean-architecture)
-- [Workflow](#workflow)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [Technologies and Libraries](#technologies-and-libraries)
-
-## Project Description
-
-This project is a boilerplate for clean architecture of rest api using typescript language.
-
-## Clean Architecture
-
-Clean Architecture is a software design philosophy that aims to create scalable and maintainable applications by separating concerns and dependencies into distinct layers. It promotes a modular and testable codebase, making it easier to develop and evolve the application over time.
-
-The key layers in Clean Architecture are:
-
-1. **Domain Layer**: Contains the core business logic, entities, and use cases of the application. It represents the unique behaviors and business rules.
-
-2. **Application Layer**: Implements the use cases by orchestrating the interactions between the domain layer and the delivery layer. It contains application-specific business rules and workflows.
-
-3. **Delivery Layer**: Handles the input and output of the application, such as REST API controllers, GraphQL resolvers, or CLI interfaces. It is responsible for translating external requests into a format suitable for the application layer and returning responses to the external clients.
-
-4. **Infrastructure Layer**: Deals with external dependencies, such as databases, third-party services, or external APIs. It provides concrete implementations of repositories, data access, and other infrastructure-related concerns.
-
-The flow of data and control within the Clean Architecture follows a strict dependency rule, where dependencies flow inward. The inner layers have no knowledge of the outer layers, ensuring high-level modules remain decoupled from low-level implementation details.
-
-## Workflow
-
-The workflow of this project can be summarized as follows:
-
-1. **Input Validation**: Incoming requests are validated using the Fastest Validator library, ensuring the data meets the defined schemas and constraints.
-
-2. **Delivery Layer**: The REST API routes/controllers receive the validated requests and invoke the corresponding use cases from the application layer.
-
-3. **Application Layer**: The use cases interact with the domain layer to execute the business logic and apply the necessary transformations.
-
-4. **Domain Layer**: The core business logic is executed, applying the defined rules and constraints. It operates on domain entities and uses domain-specific services or repositories.
-
-5. **Infrastructure Layer**: The infrastructure layer provides concrete implementations of repositories, data access, and external services required by the application.
-
-6. **Persistence**: The data is stored/retrieved from the database using the PostgreSQL database driver and relevant infrastructure components.
-
-7. **Response**: The response is formulated and returned through the delivery layer, providing the appropriate HTTP status codes and response payloads.
-
-By following the principles of Clean Architecture, this project promotes modularity, testability, and maintainability. It enables you to focus on the business logic and easily replace or update components without affecting other parts of the system.
-
-For more details on how to install and use this boilerplate, refer to the [Installation](#installation) and [Usage](#usage) sections above.
+# Fitnessist Webservice
 
 ## Prerequesite
 If you don't want to use the Docker. You have to install
@@ -65,7 +12,7 @@ If you don't want to use the Docker. You have to install
 1. Clone the repository:
 
    ```shell
-   $ git clone https://github.com/bangyadiii/clean-rest-typescript-boilerplate.git
+   $ git clone https://github.com/Fitnessist/backend-service.git 
    $ cd clean-rest-typescript-boilerplate
    ```
 
@@ -93,7 +40,7 @@ If you don't want to use the Docker. You have to install
 1. Clone the repository:
 
     ```shell
-   $ git clone https://github.com/bangyadiii/clean-rest-typescript-boilerplate.git
+   $ git clone https://github.com/Fitnessist/backend-service.git 
    $ cd clean-rest-typescript-boilerplate
    ```
 
@@ -154,9 +101,8 @@ $ npm test
 
 This will run the test suite and display the results in the console.
 
-## Contributing
-
-We welcome contributions to enhance the functionality and quality of this project. If you would like to contribute, please follow our guidelines for submitting issues, feature requests, or pull requests, and adhere to our coding conventions and branch structure. Together, we can make this project even better!
+## Documentation
+- [Postman Documentation](https://documenter.getpostman.com/view/16615700/2s93m7WM7a)
 
 ## Technologies and Libraries
 
