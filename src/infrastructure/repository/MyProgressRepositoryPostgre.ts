@@ -1,10 +1,11 @@
+import { ConflictException } from "@common/exceptions/ConflictException"
 import { MyExerciseProgress } from "@domain/my_progress/entity/MyExerciseProgress"
 import { type MyProgressRepository } from "@domain/my_progress/repository/MyProgressRepository"
 import { User } from "@domain/user/entity/User"
 import Exercise from "@domain/workout/entity/Exercise"
 import ExerciseLevel from "@domain/workout/entity/ExerciseLevel"
 import Workout from "@domain/workout/entity/Workout"
-import { type QueryConfig, type Pool } from "pg"
+import { type QueryConfig, type Pool, DatabaseError } from "pg"
 
 export class MyProgressRepositoryImpl implements MyProgressRepository {
     private readonly idGenerator: any
@@ -156,8 +157,12 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
                 .setExerciseId(createdProgress.exercise_id)
                 .setExerciseLevelId(createdProgress.exercise_level_id)
                 .build()
-        } catch (error) {
-            console.error("Error executing query:", error)
+        } catch (error: any) {
+            if (error instanceof DatabaseError) {
+                if (error.constraint != null) {
+                    throw new ConflictException("Data has already exist.")
+                }
+            }
             throw error
         }
     }
@@ -182,21 +187,16 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
             ]
         }
 
-        try {
-            const queryResult = await this.pool.query(q)
-            const updatedProgress = queryResult.rows[0]
+        const queryResult = await this.pool.query(q)
+        const updatedProgress = queryResult.rows[0]
 
-            return MyExerciseProgress.builder()
-                .setId(updatedProgress.id)
-                .setUserId(updatedProgress.user_id)
-                .setProgramId(updatedProgress.program_id)
-                .setWorkoutId(updatedProgress.workout_id)
-                .setExerciseId(updatedProgress.exercise_id)
-                .setExerciseLevelId(updatedProgress.exercise_level_id)
-                .build()
-        } catch (error) {
-            console.error("Error executing query:", error)
-            throw error
-        }
+        return MyExerciseProgress.builder()
+            .setId(updatedProgress.id)
+            .setUserId(updatedProgress.user_id)
+            .setProgramId(updatedProgress.program_id)
+            .setWorkoutId(updatedProgress.workout_id)
+            .setExerciseId(updatedProgress.exercise_id)
+            .setExerciseLevelId(updatedProgress.exercise_level_id)
+            .build()
     }
 }

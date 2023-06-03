@@ -45,8 +45,12 @@ exports.up = (pgm) => {
             default: pgm.func("current_timestamp")
         }
     })
+    pgm.addConstraint("my_exercise_progress", "unique_user_exercise_level", {
+        unique: ["user_id", "exercise_level_id"]
+    })
 }
 
 exports.down = (pgm) => {
+    pgm.dropConstraint("my_exercise_progress", "unique_user_exercise_level")
     pgm.dropTable("my_exercise_progress")
 }
