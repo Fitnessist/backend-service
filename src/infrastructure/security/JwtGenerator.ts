@@ -32,7 +32,7 @@ export class JwtGenerator implements TokenService {
         return refreshToken
     }
 
-    verifyAccessToken (token: string): string | object {
+    verifyAccessToken (token: string): string | object | JwtPayload {
         try {
             const decoded = jwt.verify(token, this.secretKey)
             return decoded

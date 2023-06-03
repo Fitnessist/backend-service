@@ -6,23 +6,31 @@ import {
     type IPagination,
     createPaginatedResponse
 } from "@helpers/PaginationHelper"
+import { type IExerciseRepository } from "@domain/workout/repository/IExerciseRepository"
+import type Exercise from "@domain/workout/entity/Exercise"
 
 export default class WorkoutUseCase {
     private readonly workoutRepository: IWorkoutRepository
     private readonly logger: Logger
+    private readonly exerciseRepo: IExerciseRepository
 
-    constructor (logger: Logger, workoutRepository: IWorkoutRepository) {
+    constructor (logger: Logger, workoutRepository: IWorkoutRepository, exerciseRepo: IExerciseRepository) {
         this.logger = logger
         this.workoutRepository = workoutRepository
+        this.exerciseRepo = exerciseRepo
     }
 
     async findWorkoutById (workoutId: string): Promise<Workout | null> {
         // Panggil method findById pada workoutRepository
-        const workout = await this.workoutRepository.findById(workoutId)
+        const workoutPomise = this.workoutRepository.findById(workoutId)
+        const exercisePromise = this.exerciseRepo.findByWorkoutId(workoutId)
+
+        const [workout, exercises] = await Promise.all([workoutPomise, exercisePromise])
 
         if (workout === null) {
             throw new NotFoundException()
         }
+        workout.exercises = exercises as Exercise[]
         return workout
     }
 

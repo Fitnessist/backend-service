@@ -17,9 +17,8 @@ export class ExerciseLevelRepositoryPostgre implements IExerciseLevelRepository 
             text: `
             SELECT
               *
-            FROM exercises exercise
-            LEFT JOIN exercise_levels exerciseLevel ON exercise.id = exerciseLevel.exercise_id
-            WHERE exercise.workout_id = $1
+            FROM exercise_levels exerciseLevels
+            WHERE exerciseLevels.id = $1
           `,
             values: [id]
         }

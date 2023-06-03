@@ -57,14 +57,6 @@ export class MyExerciseProgressUseCase {
         myProgressDTO: MyExerciseProgressDTO
     ): Promise<MyExerciseProgress> {
         try {
-            const myProgress = MyExerciseProgress.builder()
-                .setUserId(myProgressDTO.userId)
-                .setProgramId(myProgressDTO.programId)
-                .setWorkoutId(myProgressDTO.workoutId)
-                .setExerciseId(myProgressDTO.exerciseId)
-                .setExerciseLevelId(myProgressDTO.exerciseLevelId)
-                .build()
-
             // Perform any necessary validation or business logic before creating
             const userPromise = this.userRepo.findById(myProgressDTO.userId)
             const workoutPromise = this.workokutRepo.findById(
@@ -107,6 +99,14 @@ export class MyExerciseProgressUseCase {
             if (errors.length > 0) {
                 throw new ValidationException(errors)
             }
+
+            const myProgress = MyExerciseProgress.builder()
+                .setUserId(myProgressDTO.userId)
+                .setProgramId(myProgressDTO.programId)
+                .setWorkoutId(myProgressDTO.workoutId)
+                .setExerciseId(myProgressDTO.exerciseId)
+                .setExerciseLevelId(myProgressDTO.exerciseLevelId)
+                .build()
 
             const createdMyProgress = await this.myProgressRepository.create(
                 myProgress

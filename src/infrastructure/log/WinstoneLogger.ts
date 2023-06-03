@@ -8,7 +8,7 @@ export class WLogger implements Logger {
         this.logger = winston.createLogger({
             transports: [
                 new winston.transports.Console({
-                    format: winston.format.splat()
+                    format: winston.format.simple()
                 })
             ]
         })

@@ -239,6 +239,9 @@ container.register([
                 },
                 {
                     internal: "WorkoutRepository"
+                },
+                {
+                    internal: "ExerciseRepository"
                 }
             ]
         }
