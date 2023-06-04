@@ -39,7 +39,6 @@ export default class ProgramController {
                 sendSuccess(res, HTTP_STATUS.OK, datas, "OK")
             })
             .catch((error: any) => {
-                console.log(error)
                 next(error)
             })
     }

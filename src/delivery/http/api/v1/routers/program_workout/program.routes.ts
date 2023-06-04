@@ -7,7 +7,7 @@ const programRouter = express.Router()
 const programUseCase = container.getInstance("ProgramUseCase") as ProgramUseCase
 const programController = new ProgramController(programUseCase)
 
-programRouter.get("/programs/:programId", programController.getProgramById)
-programRouter.get("/programs", programController.getAllPrograms)
+programRouter.get("/:programId", programController.getProgramById)
+programRouter.get("/", programController.getAllPrograms)
 
 export default programRouter

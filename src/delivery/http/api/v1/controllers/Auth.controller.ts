@@ -20,6 +20,7 @@ export class AuthController {
         // binding konteks function registerUser supaya terikat dengan kelas ini (this)
         this.registerUser = this.registerUser.bind(this)
         this.login = this.login.bind(this)
+        this.findById = this.findById.bind(this)
     }
 
     public registerUser (req: Request, res: Response): void {
@@ -44,6 +45,21 @@ export class AuthController {
             .then(({ accessToken, refreshToken }) => {
                 // Send the access token and refresh token in the response
                 sendSuccess(res, HTTP_STATUS.OK, { accessToken, refreshToken }, "OK")
+            })
+            .catch((error: any) => {
+                next(error)
+            })
+    }
+
+    public findById (req: Request, res: Response, next: NextFunction): void {
+        const currentUser = req.currentUser
+        if (currentUser === undefined) {
+            sendError(res, HTTP_STATUS.BAD_REQUEST, "UNAUTHORIZED", "AUTHRORIZATION_ERROR")
+            return
+        }
+        this.authUserUseCase.findById(currentUser.id)
+            .then((user) => {
+                sendSuccess(res, HTTP_STATUS.OK, user, "OK")
             })
             .catch((error: any) => {
                 next(error)

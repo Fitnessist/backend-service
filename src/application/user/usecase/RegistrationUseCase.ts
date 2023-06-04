@@ -1,6 +1,6 @@
 import { type UserRepository } from "@domain/user/repository/UserRepository"
 import { type Logger } from "@infrastructure/log/Logger"
-import { type User } from "@domain/user/entity/User"
+import { User } from "@domain/user/entity/User"
 import { type PasswordEncryptorInterface } from "@application/security/PasswordEncoderInterface"
 import { type RegisterUser } from "@domain/user/entity/RegisterUser"
 import { ConflictException } from "@common/exceptions/ConflictException"
@@ -36,15 +36,7 @@ export class RegisterUserUseCase {
             )
 
             // Create a new user object
-            const newUser: User = {
-                id: "",
-                username,
-                password: encryptedPassword,
-                email,
-                name,
-                createdAt: undefined,
-                updatedAt: undefined
-            }
+            const newUser: User = new User("", username, encryptedPassword, email, name)
 
             // Save the new user to the repository
             const id = await this.userRepository.create(newUser)

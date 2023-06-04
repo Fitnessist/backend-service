@@ -11,6 +11,7 @@ import { ServiceUnavailableException } from "@common/exceptions/ServiceUnavailab
 import { type Logger } from "@infrastructure/log/Logger"
 import http, { type Server as HTTPServer } from "http"
 import morgan from "morgan"
+import { HTTP_STATUS } from "@common/constants/HTTP_code"
 
 export default class Server {
     private readonly app: express.Application
@@ -35,7 +36,7 @@ export default class Server {
 
     public registerErrorHandler (): void {
         this.app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
-            if (err instanceof ValidationException) {
+            if (err instanceof ValidationException || err?.statusCode === HTTP_STATUS.BAD_REQUEST) {
                 this.errorHandler.handleValidationException(err, req, res, next)
             } else if (err instanceof ForbiddenException) {
                 this.errorHandler.handleForbiddenException(err, req, res, next)
@@ -50,7 +51,12 @@ export default class Server {
             } else if (err instanceof ServiceUnavailableException) {
                 this.errorHandler.handleServiceUnavailableException(err, req, res, next)
             } else {
-                this.logger.error(String(err?.stack))
+                if (err?.statusCode === HTTP_STATUS.NOT_FOUND) {
+                    this.errorHandler
+                        .handleNotFoundException(err, req, res, next)
+                    return
+                }
+                this.logger.error("Error kenapa ya: ☠️\n =>" + String(err?.stack))
                 this.errorHandler.handleInternalServerErrorException(err, req, res, next)
             }
         })
