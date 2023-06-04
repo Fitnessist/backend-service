@@ -45,14 +45,14 @@ export const authorizationMiddleware = (
         userRepo
             .findById(userId)
             .then((user) => {
+                if (user == null) throw new UnauthorizedException()
+
                 req.currentUser = user
+                next()
             })
             .catch((error) => {
-                next(error)
+                throw error
             })
-
-        // Melanjutkan ke middleware selanjutnya
-        next()
     } catch (error: any) {
         // Menangani exception jika terjadi Unauthorized
         next(error)

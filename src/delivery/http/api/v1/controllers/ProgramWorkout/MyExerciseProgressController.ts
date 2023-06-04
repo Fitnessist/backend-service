@@ -1,17 +1,21 @@
 import { type NextFunction, type Request, type Response } from "express"
 import { MyExerciseProgressDTO } from "@domain/my_progress/dto/MyExerciseProgressDTO"
 import { type MyExerciseProgressUseCase } from "@application/usecase/my_progress/MyExerciseProgressUseCase"
-import { sendSuccess } from "../ApiResponseHelper"
+import { sendError, sendSuccess } from "../ApiResponseHelper"
 import { HTTP_STATUS } from "@common/constants/HTTP_code"
+import { type MyInventoryUseCase } from "@application/usecase/my_progress/MyInventoryUseCase"
 
 export class MyExerciseProgressController {
     private readonly myExerciseProgressUseCase: MyExerciseProgressUseCase
+    private readonly myInventoryUC: MyInventoryUseCase
 
-    constructor (myExerciseProgressUseCase: MyExerciseProgressUseCase) {
+    constructor (myExerciseProgressUseCase: MyExerciseProgressUseCase, myInventoryUC: MyInventoryUseCase) {
         this.myExerciseProgressUseCase = myExerciseProgressUseCase
+        this.myInventoryUC = myInventoryUC
 
         this.findByUser = this.findByUser.bind(this)
         this.create = this.create.bind(this)
+        this.getInventory = this.getInventory.bind(this)
     }
 
     public findByUser (req: Request, res: Response, next: NextFunction): void {
@@ -39,6 +43,21 @@ export class MyExerciseProgressController {
                     myExerciseProgress,
                     "CREATED"
                 )
+            })
+            .catch((error: any) => {
+                next(error)
+            })
+    }
+
+    public getInventory (req: Request, res: Response, next: NextFunction): void {
+        if (req.currentUser === undefined) {
+            sendError(res, HTTP_STATUS.BAD_REQUEST, "UNAUTHORIZED", "AUTHRORIZATION_ERROR")
+            return
+        }
+
+        this.myInventoryUC.getInventory(req.currentUser.id)
+            .then((data) => {
+                sendSuccess(res, HTTP_STATUS.OK, data, "OK")
             })
             .catch((error: any) => {
                 next(error)

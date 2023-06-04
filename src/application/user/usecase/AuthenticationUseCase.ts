@@ -6,6 +6,8 @@ import { UnauthorizedException } from "@common/exceptions/UnauthorizedException"
 import { type TokenService } from "@application/security/TokenService"
 import { type TokenRepository } from "@domain/user/repository/TokenRepository"
 import { type Token } from "@domain/user/entity/Token"
+import UserResponseDTO from "@domain/user/entity/UserResponseDTO"
+import { NotFoundException } from "@common/exceptions/NotFoundException"
 
 export class AuthenticationUseCase {
     private readonly userRepository: UserRepository
@@ -60,5 +62,15 @@ export class AuthenticationUseCase {
         await this.tokenRepository.saveToken(token)
 
         return { accessToken, refreshToken }
+    }
+
+    public async findById (userId: string): Promise<UserResponseDTO> {
+        const user = await this.userRepository.findById(userId)
+        if (user === null) {
+            throw new NotFoundException()
+        }
+
+        const response = new UserResponseDTO(user)
+        return response
     }
 }

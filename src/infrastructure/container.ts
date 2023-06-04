@@ -20,6 +20,8 @@ import { MyProgressRepositoryImpl } from "./repository/MyProgressRepositoryPostg
 import { MyExerciseProgressUseCase } from "@application/usecase/my_progress/MyExerciseProgressUseCase"
 import { MyExerciseProgressController } from "@delivery/http/api/v1/controllers/ProgramWorkout/MyExerciseProgressController"
 import { ExerciseLevelRepositoryPostgre } from "./repository/ExerciseLevelRepositoryPostgre"
+import { MyInventoryRepositoryPostgre } from "./repository/MyInventoryRepositoryPostgre"
+import { MyInventoryUseCase } from "@application/usecase/my_progress/MyInventoryUseCase"
 
 const container = createContainer()
 
@@ -281,6 +283,23 @@ container.register([
 
 container.register([
     {
+        key: "MyInventoryRepository",
+        Class: MyInventoryRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
         key: "ExerciseLevelRepository",
         Class: ExerciseLevelRepositoryPostgre,
         parameter: {
@@ -313,6 +332,26 @@ container.register([
                 },
                 {
                     internal: "ExerciseLevelRepository"
+                },
+                {
+                    internal: "Logger"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: MyInventoryUseCase.name,
+        Class: MyInventoryUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "MyInventoryRepository"
+                },
+                {
+                    internal: "UserRepository"
                 },
                 {
                     internal: "Logger"
