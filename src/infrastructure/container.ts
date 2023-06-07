@@ -22,6 +22,10 @@ import { MyExerciseProgressController } from "@delivery/http/api/v1/controllers/
 import { ExerciseLevelRepositoryPostgre } from "./repository/ExerciseLevelRepositoryPostgre"
 import { MyInventoryRepositoryPostgre } from "./repository/MyInventoryRepositoryPostgre"
 import { MyInventoryUseCase } from "@application/usecase/my_progress/MyInventoryUseCase"
+import { FoodPredictUseCase } from "@application/usecase/predict/FoodPredictUseCase"
+import { createAxiosInstance } from "./http/axiosInstance"
+import { GoogleCloudStorageService } from "./storage/CloudStorageService"
+import { FoodRepositoryPostgre } from "./repository/FoodRepositoryPostgre"
 
 const container = createContainer()
 
@@ -363,12 +367,57 @@ container.register([
 
 container.register([
     {
+        key: "FoodRepository",
+        Class: FoodRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
         key: "MyExerciseProgressController",
         Class: MyExerciseProgressController,
         parameter: {
             dependencies: [
                 {
                     internal: "MyExerciseProgressUseCase"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: FoodPredictUseCase.name,
+        Class: FoodPredictUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "FoodRepository"
+                },
+                {
+                    concrete: createAxiosInstance(
+                        process.env.FOOD_PREDICT_MODEL_SERVICE_URL ?? ""
+                    )
+                },
+                {
+                    concrete: new GoogleCloudStorageService(process.env.STORAGE_BUCKET_NAME ?? "")
+                },
+                {
+                    internal: "UserRepository"
+                },
+                {
+                    internal: "Logger"
                 }
             ]
         }
