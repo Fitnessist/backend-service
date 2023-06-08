@@ -1,11 +1,11 @@
 import { NotFoundException } from "@common/exceptions/NotFoundException"
-import type Program from "@domain/workout/entity/Program"
 import { type IProgramRepository } from "@domain/workout/repository/IProgramRepository"
 import { type Logger } from "@infrastructure/log/Logger"
 import {
     type IPagination,
     createPaginatedResponse
 } from "@helpers/PaginationHelper"
+import ProgramResponseDTO from "@domain/workout/dto/ProgramResponseDTO"
 
 export default class ProgramUseCase {
     private readonly logger: Logger
@@ -19,15 +19,15 @@ export default class ProgramUseCase {
         this.getProgramsByPage = this.getProgramsByPage.bind(this)
     }
 
-    async findProgramById (programId: string): Promise<Program> {
+    async findProgramById (programId: string): Promise<ProgramResponseDTO> {
         // Panggil method findById pada programRepository
         const program = await this.programRepository.findById(programId)
 
         if (program === null) {
             throw new NotFoundException()
         }
-
-        return program
+        const programResult = new ProgramResponseDTO(program)
+        return programResult
     }
 
     async getProgramsByPage (
