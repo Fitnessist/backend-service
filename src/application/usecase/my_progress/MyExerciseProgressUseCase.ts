@@ -55,7 +55,7 @@ export class MyExerciseProgressUseCase {
 
     public async create (
         myProgressDTO: MyExerciseProgressDTO
-    ): Promise<MyExerciseProgress> {
+    ): Promise<MyExerciseProgressResponseDTO> {
         try {
             // Perform any necessary validation or business logic before creating
             const userPromise = this.userRepo.findById(myProgressDTO.userId)
@@ -111,8 +111,8 @@ export class MyExerciseProgressUseCase {
             const createdMyProgress = await this.myProgressRepository.create(
                 myProgress
             )
-
-            return createdMyProgress
+            const responseData = new MyExerciseProgressResponseDTO(createdMyProgress)
+            return responseData
         } catch (error: any) {
             // Handle any errors that occurred during the process
             this.logger.error(error.message)

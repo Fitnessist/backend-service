@@ -1,9 +1,9 @@
 import { type User } from "@domain/user/entity/User"
-import type Exercise from "@domain/workout/entity/Exercise"
-import type ExerciseLevel from "@domain/workout/entity/ExerciseLevel"
 import type Program from "@domain/workout/entity/Program"
 import type Workout from "@domain/workout/entity/Workout"
 import { type MyExerciseProgress } from "../entity/MyExerciseProgress"
+import ExerciseResponseDTO from "@domain/workout/dto/ExerciseResponseDTO"
+import ExerciseLevelResponseDTO from "@domain/workout/dto/ExerciseLevelResponseDTO"
 
 export class MyExerciseProgressResponseDTO {
     public user_id: string
@@ -13,9 +13,9 @@ export class MyExerciseProgressResponseDTO {
     public workout_id: string
     public workout?: Workout | null
     public exercise_id: string
-    public exercise?: Exercise | null
+    public exercise?: ExerciseResponseDTO | null
     public exercise_level_id: string
-    public exerciseLevels?: ExerciseLevel | null
+    public exercise_levels?: ExerciseLevelResponseDTO | null
 
     constructor (payload: MyExerciseProgress) {
         this.user_id = payload.userId
@@ -26,7 +26,7 @@ export class MyExerciseProgressResponseDTO {
         this.program = payload.program
         this.user = payload.user
         this.workout = payload.workout
-        this.exercise = payload.exercise
-        this.exerciseLevels = payload.exerciseLevel
+        this.exercise = payload.exercise !== null ? new ExerciseResponseDTO(payload.exercise) : undefined
+        this.exercise_levels = payload.exerciseLevel !== null ? new ExerciseLevelResponseDTO(payload.exerciseLevel) : undefined
     }
 }
