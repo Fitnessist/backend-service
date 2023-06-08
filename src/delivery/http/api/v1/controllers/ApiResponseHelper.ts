@@ -1,11 +1,11 @@
 import { type Response } from "express"
 
-interface ApiResponse {
+export interface ApiResponse<T> {
     status: {
         code: number
         message: string
     }
-    data?: any
+    data?: T
     error?: {
         message: string
         code: string
@@ -19,7 +19,7 @@ export const sendSuccess = (
     data: any,
     message: string
 ): void => {
-    const response: ApiResponse = {
+    const response: ApiResponse<any> = {
         status: {
             code: statusCode,
             message
@@ -37,7 +37,7 @@ export const sendError = (
     errorCode: string,
     details?: any[]
 ): void => {
-    const response: ApiResponse = {
+    const response: ApiResponse<any> = {
         status: {
             code: statusCode,
             message

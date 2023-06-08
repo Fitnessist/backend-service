@@ -20,7 +20,7 @@ export class UserRepositoryPostgre implements UserRepositoryInterface {
             const q: QueryConfig = {
                 text: `
                     SELECT 
-                        U.id AS user_id, 
+                        U.id, 
                         U.username, 
                         U.name, 
                         U.email, 
@@ -40,7 +40,7 @@ export class UserRepositoryPostgre implements UserRepositoryInterface {
             }
             const row = result.rows[0]
 
-            const user = new User(row.user_id, row.username, row.password, row.email, row.name)
+            const user = new User(row.id, row.username, row.password, row.email, row.name)
             user.myInventory = new MyInventory(row.inventory_id, row.user_id, row.total_points, row.total_calories_burned)
 
             return user

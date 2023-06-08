@@ -1,10 +1,9 @@
 import Validator, { type ValidationError } from "fastest-validator"
-import { type RegisterUserPayload } from "@domain/user/entity/RegisterUser"
 import { ValidationException } from "@common/exceptions/ValidationException"
 
 const validator = new Validator()
 
-export function validateSchema (payload: RegisterUserPayload, schema: any): void {
+export function validateSchema (payload: any, schema: any): void {
     const validationResult = validator.validate(payload, schema)
 
     if (validationResult !== true) {

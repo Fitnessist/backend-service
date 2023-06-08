@@ -1,5 +1,4 @@
 import { NotFoundException } from "@common/exceptions/NotFoundException"
-import type Workout from "@domain/workout/entity/Workout"
 import { type IWorkoutRepository } from "@domain/workout/repository/IWorkoutRepository"
 import { type Logger } from "@infrastructure/log/Logger"
 import {
@@ -8,6 +7,7 @@ import {
 } from "@helpers/PaginationHelper"
 import { type IExerciseRepository } from "@domain/workout/repository/IExerciseRepository"
 import type Exercise from "@domain/workout/entity/Exercise"
+import WorkoutResponseDTO from "@domain/workout/dto/WorkoutResponseDTO"
 
 export default class WorkoutUseCase {
     private readonly workoutRepository: IWorkoutRepository
@@ -20,7 +20,7 @@ export default class WorkoutUseCase {
         this.exerciseRepo = exerciseRepo
     }
 
-    async findWorkoutById (workoutId: string): Promise<Workout | null> {
+    async findWorkoutById (workoutId: string): Promise<WorkoutResponseDTO | null> {
         // Panggil method findById pada workoutRepository
         const workoutPomise = this.workoutRepository.findById(workoutId)
         const exercisePromise = this.exerciseRepo.findByWorkoutId(workoutId)
@@ -31,7 +31,8 @@ export default class WorkoutUseCase {
             throw new NotFoundException()
         }
         workout.exercises = exercises as Exercise[]
-        return workout
+        const workoutResponse = new WorkoutResponseDTO(workout)
+        return workoutResponse
     }
 
     async getAllWorkouts (

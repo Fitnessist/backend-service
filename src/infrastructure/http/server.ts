@@ -1,4 +1,8 @@
-import express, { type Request, type Response, type NextFunction } from "express"
+import express, {
+    type Request,
+    type Response,
+    type NextFunction
+} from "express"
 import bodyParser from "body-parser"
 import ErrorHandler from "@middleware/ErrorHandler"
 import { ValidationException } from "@common/exceptions/ValidationException"
@@ -35,31 +39,87 @@ export default class Server {
     }
 
     public registerErrorHandler (): void {
-        this.app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
-            if (err instanceof ValidationException || err?.statusCode === HTTP_STATUS.BAD_REQUEST) {
-                this.errorHandler.handleValidationException(err, req, res, next)
-            } else if (err instanceof ForbiddenException) {
-                this.errorHandler.handleForbiddenException(err, req, res, next)
-            } else if (err instanceof UnauthorizedException) {
-                this.errorHandler.handleUnauthorizedException(err, req, res, next)
-            } else if (err instanceof NotFoundException) {
-                this.errorHandler.handleNotFoundException(err, req, res, next)
-            } else if (err instanceof ConflictException) {
-                this.errorHandler.handleConflictException(err, req, res, next)
-            } else if (err instanceof InternalServerErrorException) {
-                this.errorHandler.handleInternalServerErrorException(err, req, res, next)
-            } else if (err instanceof ServiceUnavailableException) {
-                this.errorHandler.handleServiceUnavailableException(err, req, res, next)
-            } else {
-                if (err?.statusCode === HTTP_STATUS.NOT_FOUND) {
-                    this.errorHandler
-                        .handleNotFoundException(err, req, res, next)
-                    return
+        this.app.use(
+            (
+                err: any,
+                req: Request,
+                res: Response,
+                next: NextFunction
+            ): void => {
+                if (
+                    err instanceof ValidationException ||
+                    err?.statusCode === HTTP_STATUS.BAD_REQUEST
+                ) {
+                    this.errorHandler.handleValidationException(
+                        err,
+                        req,
+                        res,
+                        next
+                    )
+                } else if (err instanceof ForbiddenException) {
+                    this.errorHandler.handleForbiddenException(
+                        err,
+                        req,
+                        res,
+                        next
+                    )
+                } else if (err instanceof UnauthorizedException) {
+                    this.errorHandler.handleUnauthorizedException(
+                        err,
+                        req,
+                        res,
+                        next
+                    )
+                } else if (err instanceof NotFoundException) {
+                    this.errorHandler.handleNotFoundException(
+                        err,
+                        req,
+                        res,
+                        next
+                    )
+                } else if (err instanceof ConflictException) {
+                    this.errorHandler.handleConflictException(
+                        err,
+                        req,
+                        res,
+                        next
+                    )
+                } else if (err instanceof InternalServerErrorException) {
+                    this.errorHandler.handleInternalServerErrorException(
+                        err,
+                        req,
+                        res,
+                        next
+                    )
+                } else if (err instanceof ServiceUnavailableException) {
+                    this.errorHandler.handleServiceUnavailableException(
+                        err,
+                        req,
+                        res,
+                        next
+                    )
+                } else {
+                    if (err?.statusCode === HTTP_STATUS.NOT_FOUND) {
+                        this.errorHandler.handleNotFoundException(
+                            err,
+                            req,
+                            res,
+                            next
+                        )
+                        return
+                    }
+                    this.logger.error(
+                        "Error kenapa ya: ☠️\n =>" + String(err?.stack)
+                    )
+                    this.errorHandler.handleInternalServerErrorException(
+                        err,
+                        req,
+                        res,
+                        next
+                    )
                 }
-                this.logger.error("Error kenapa ya: ☠️\n =>" + String(err?.stack))
-                this.errorHandler.handleInternalServerErrorException(err, req, res, next)
             }
-        })
+        )
     }
 
     public registerRoutes (router: express.Router): void {

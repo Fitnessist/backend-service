@@ -1,5 +1,6 @@
 import { type MyExerciseProgress } from "@domain/my_progress/entity/MyExerciseProgress"
 import { type MyInventory } from "@domain/my_progress/entity/MyInventory"
+import type Program from "@domain/workout/entity/Program"
 import { Entity, Column } from "typeorm"
 
 @Entity()
@@ -24,6 +25,9 @@ export class User {
 
     @Column()
     public updatedAt: string | undefined
+
+    @Column()
+    public program: Program | undefined
 
     @Column()
     public myExerciseProgress?: MyExerciseProgress | undefined
