@@ -57,7 +57,6 @@ steps:
     - name: "gcr.io/cloud-builders/gcloud" 
       args: 
           - "run"
-          - "beta"
           - "services" 
           - "update" 
           - "fitnessist-stagging" 
@@ -67,7 +66,6 @@ steps:
     - name: "gcr.io/cloud-builders/gcloud"
       args: 
           - "run"
-          - "beta"
           - "services" 
           - "update" 
           - "fitnessist-stagging" 
