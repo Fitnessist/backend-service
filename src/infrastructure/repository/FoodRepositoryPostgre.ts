@@ -37,13 +37,13 @@ export class FoodRepositoryPostgre implements FoodRepository {
         return food
     }
 
-    public async addUserFoodHistory (imageUrl: string, userId: string): Promise<any> {
+    public async addUserFoodHistory (userId: string, imageUrl?: string): Promise<any> {
         const q: QueryConfig = {
             text: `
                 INSERT INTO user_food_histories(user_id, image_url)
                 VALUES ($1, $2)
             `,
-            values: [userId, imageUrl]
+            values: [userId, imageUrl ?? null]
         }
         const result = await this.pool.query(q)
         const data = result.rows[0]

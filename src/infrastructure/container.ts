@@ -26,6 +26,8 @@ import { FoodPredictUseCase } from "@application/usecase/predict/FoodPredictUseC
 import { createAxiosInstance } from "./http/axiosInstance"
 import { GoogleCloudStorageService } from "./storage/CloudStorageService"
 import { FoodRepositoryPostgre } from "./repository/FoodRepositoryPostgre"
+import { UserProgramRepositoryPostgre } from "./repository/UserProgramRepositoryPostgre"
+import { MyProgramUseCase } from "@application/usecase/my_progress/MyProgramUseCase"
 
 const container = createContainer()
 
@@ -304,6 +306,23 @@ container.register([
 
 container.register([
     {
+        key: "MyProgramRepository",
+        Class: UserProgramRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
         key: "ExerciseLevelRepository",
         Class: ExerciseLevelRepositoryPostgre,
         parameter: {
@@ -336,6 +355,26 @@ container.register([
                 },
                 {
                     internal: "ExerciseLevelRepository"
+                },
+                {
+                    internal: "Logger"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "MyProgramUseCase",
+        Class: MyProgramUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "MyProgramRepository"
+                },
+                {
+                    internal: "ProgramRepository"
                 },
                 {
                     internal: "Logger"

@@ -73,10 +73,9 @@ export class FoodPredictUseCase {
             }
 
             // const uploadPromise = this.storageService.uploadFile(foodImage, "users_foods")
-            const predictionResultPromise = this.axios.post("/predict", httpJsonBody)
+            const predictionResult = await this.axios.post("/predict", httpJsonBody)
 
-            const [predictionResult] = await Promise.all([predictionResultPromise])
-            // await this.foodRepo.addUserFoodHistory(uploadResult, userId)
+            await this.foodRepo.addUserFoodHistory(userId, undefined) // url untuk image
 
             const data = predictionResult.data as ApiResponse<any>
             if (

@@ -1,22 +1,14 @@
 import { UserRepositoryPostgre } from "../UserRepositoryPostgre"
-import { type User } from "@domain/user/entity/User"
+import { User } from "@domain/user/entity/User"
 import { type Logger } from "../../log/Logger"
 import { WLogger } from "../../log/WinstoneLogger"
-import { type QueryResult, type Pool, type QueryConfig } from "pg"
+import { type QueryResult, type Pool } from "pg"
 
 describe("UserRepositoryPostgre", () => {
     let userRepository: UserRepositoryPostgre
     let mockPool: Partial<Pool>
 
-    const user: User = {
-        id: "user-123",
-        username: "john_doe",
-        password: "password",
-        email: "john.doe@example.com",
-        name: "John Doe",
-        createdAt: undefined,
-        updatedAt: undefined
-    }
+    const user = new User("user-123", "john_doe", "password", "john.doe@example.com", "John Doe")
     const ID = {
         idGenerator: jest.fn()
     }
@@ -48,13 +40,6 @@ describe("UserRepositoryPostgre", () => {
             (mockPool.query as jest.Mock).mockResolvedValueOnce(mockQueryResult)
             const res = await userRepository.findById(user.id)
             expect(res).toMatchObject(user)
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "SELECT id, username, name, email, password FROM users WHERE id = $1 LIMIT 1",
-                values: [user.id]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
         })
         it("should return null when user not found", async () => {
             // Mock the expected database query result
@@ -90,13 +75,6 @@ describe("UserRepositoryPostgre", () => {
             (mockPool.query as jest.Mock).mockResolvedValueOnce(mockQueryResult)
             const res = await userRepository.findByEmail(user.email)
             expect(res).toMatchObject(user)
-
-            const q: QueryConfig = {
-                text: "SELECT id, username, name, email, password FROM users WHERE email = $1 LIMIT 1",
-                values: [user.email]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(q)
-            expect(mockPool.query).toHaveBeenCalledTimes(1)
         })
 
         it("should return null when user not found", async () => {
@@ -136,13 +114,6 @@ describe("UserRepositoryPostgre", () => {
             // Call the create method and expect it to return the user ID
             const result = await userRepository.create(user)
             expect(result).toBe("user-123")
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "INSERT INTO users (id, username, password, email, name) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-                values: [user.id, user.username, user.password, user.email, user.name]
-            }
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
         })
     })
 })

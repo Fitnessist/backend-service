@@ -1,8 +1,8 @@
 export interface IPagination {
-    currentPage: number
-    perPage: number
-    totalPages: number
-    totalItems: number
+    current_page: number
+    per_page: number
+    total_pages: number
+    total_items: number
     items: any[]
     links: {
         prev: string
@@ -21,10 +21,10 @@ export function createPaginatedResponse (
     const currentPage = pageNumber
 
     const response: IPagination = {
-        currentPage: pageNumber,
-        perPage,
-        totalPages,
-        totalItems,
+        current_page: pageNumber,
+        per_page: perPage,
+        total_pages: totalPages,
+        total_items: totalItems,
         items,
         links: {
             prev: "",
