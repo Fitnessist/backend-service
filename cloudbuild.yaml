@@ -58,7 +58,6 @@ steps:
       args: 
           - "run"
           - "beta"
-          - "deploy"
           - "services" 
           - "update" 
           - "fitnessist-stagging" 
@@ -69,7 +68,6 @@ steps:
       args: 
           - "run"
           - "beta"
-          - "deploy"
           - "services" 
           - "update" 
           - "fitnessist-stagging" 
