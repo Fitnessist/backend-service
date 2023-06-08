@@ -29,21 +29,21 @@ export class FoodRepositoryPostgre implements FoodRepository {
 
         const row = result.rows[0]
 
-        const food = new Food(
-            row.id,
-            row.food_name,
-            row.calories_per_100gr
-        )
+        const food = new Food(row.id, row.food_name, row.calories_per_100gr)
         return food
     }
 
-    public async addUserFoodHistory (userId: string, imageUrl?: string): Promise<any> {
+    public async addUserFoodHistory (payload: {
+        userId: string
+        imageUrl?: string
+        foodId?: string
+    }): Promise<any> {
         const q: QueryConfig = {
             text: `
-                INSERT INTO user_food_histories(user_id, image_url)
-                VALUES ($1, $2)
+                INSERT INTO user_food_histories(user_id, image_url, food_id)
+                VALUES ($1, $2, $3)
             `,
-            values: [userId, imageUrl ?? null]
+            values: [payload.userId, payload.imageUrl ?? null, payload.foodId ?? null]
         }
         const result = await this.pool.query(q)
         const data = result.rows[0]

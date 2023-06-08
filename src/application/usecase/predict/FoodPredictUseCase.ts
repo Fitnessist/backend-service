@@ -65,7 +65,7 @@ export class FoodPredictUseCase {
                 predictModelServiceURL === undefined ||
                 predictModelServiceURL === ""
             ) {
-                throw new InternalServerErrorException("FOOD_PREDICT_MODEL_SERVICE_URL is undefined.")
+                throw new Error("FOOD_PREDICT_MODEL_SERVICE_URL is undefined.")
             }
 
             const httpJsonBody: any = {
@@ -75,8 +75,6 @@ export class FoodPredictUseCase {
             // const uploadPromise = this.storageService.uploadFile(foodImage, "users_foods")
             const predictionResult = await this.axios.post("/predict", httpJsonBody)
 
-            await this.foodRepo.addUserFoodHistory(userId, undefined) // url untuk image
-
             const data = predictionResult.data as ApiResponse<any>
             if (
                 predictionResult === null ||
@@ -84,6 +82,12 @@ export class FoodPredictUseCase {
             ) {
                 throw new NotFoundException()
             }
+
+            await this.foodRepo.addUserFoodHistory({
+                userId,
+                imageUrl: undefined, // ini harusnya public url dari upload image
+                foodId: data.data?.prediction?.at(0).food?.id ?? null // get first food's id from prediction result
+            })
 
             return data
         } catch (error: any) {
