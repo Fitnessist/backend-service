@@ -49,15 +49,15 @@ export class FoodPredictUseCase {
 
             // Mengonversi file menjadi base64 menggunakan Buffer
             const base64String = Buffer.from(fileData).toString("base64")
-            if (fs.existsSync(file)) {
-                fs.unlinkSync(file)
-            }
 
             // Mengonversi file buffer menjadi base64 string
             if (base64String === undefined) {
                 throw new InternalServerErrorException()
             }
-            // await this.storageService.uploadFile(foodImage)
+            // const publicUrlUploadedImage = await this.storageService.uploadFile(foodImage, "users_foods")
+            if (fs.existsSync(file)) {
+                fs.unlinkSync(file)
+            }
             const predictModelServiceURL = process.env.FOOD_PREDICT_MODEL_SERVICE_URL
 
             if (
