@@ -20,7 +20,7 @@ const upload = multer({
         destination: os.tmpdir()
     }),
     limits: {
-        fieldSize: 1.5 * 1024 * 1024
+        fieldSize: 1 * 1024 * 1024 // 1 MB dalam bentuk bytes
     }
 })
 router.post("/", authorizationMiddleware, upload.single("food_image"), controller.predictFoodImage)
