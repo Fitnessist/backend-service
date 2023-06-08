@@ -54,10 +54,6 @@ steps:
           - "--memory=512Mi"
           - "--timeout=60s"
           - "--set-env-vars=APP_HOST=http://localhost,APP_PORT=$_APP_PORT,DATABASE_HOST=$_DATABASE_HOST,DATABASE_USER=$_DATABASE_USER,DATABASE_PORT=$_DATABASE_PORT,DATABASE_NAME=$_DATABASE_NAME"
-          - "--add-cloudsql-instances $_INSTANCE_CONNECTION_NAME" 
-          - "--update-env-vars CLOUD_SQL_CONNECTION_NAME=$_CLOUD_SQL_CONNECTION_NAME"
-          - "--update-secrets fitnessist_db_password=latest" 
-          - "set-secrets fitnessist_db_password=latest"
 
 availableSecrets:
     secretManager:
