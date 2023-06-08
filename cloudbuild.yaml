@@ -25,8 +25,6 @@ steps:
           - "DATABASE_HOST=$_DATABASE_HOST"
           - "--build-arg"
           - "DATABASE_USER=$_DATABASE_USER"
-          - "--build-arg"
-          - "DATABASE_PASSWORD=$$DATABASE_PASSWORD"
           - "-t"
           - "gcr.io/$PROJECT_ID/fitnessist-image"
           - "."
@@ -43,18 +41,19 @@ steps:
           - "."
 
     - name: "gcr.io/cloud-builders/gcloud"
-      secretEnv: ["DATABASE_PASSWORD"]
       args:
           - "run"
           - "deploy"
           - "fitnessist-staging"
           - "--image=gcr.io/$PROJECT_ID/fitnessist-image"
           - "--region=asia-southeast2"
+          - "--min-instances=1"
+          - "--max-instances=3"
           - "--platform=managed"
           - "--allow-unauthenticated"
-          - "--memory=256Mi"
+          - "--memory=512Mi"
           - "--timeout=60s"
-          - "--set-env-vars=APP_HOST=http://localhost,APP_PORT=$_APP_PORT,DATABASE_HOST=$_DATABASE_HOST,DATABASE_USER=$_DATABASE_USER,DATABASE_PASSWORD=$$DATABASE_PASSWORD,DATABASE_PORT=$_DATABASE_PORT,DATABASE_NAME=$_DATABASE_NAME"
+          - "--set-env-vars=APP_HOST=http://localhost,APP_PORT=$_APP_PORT,DATABASE_HOST=$_DATABASE_HOST,DATABASE_USER=$_DATABASE_USER,DATABASE_PORT=$_DATABASE_PORT,DATABASE_NAME=$_DATABASE_NAME"
 
 availableSecrets:
     secretManager:
