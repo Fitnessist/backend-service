@@ -289,6 +289,26 @@ container.register([
 
 container.register([
     {
+        key: "UserPropertiesRepository",
+        Class: UserPropertiesRepositoryPostgre,
+        parameter: {
+            dependencies: [
+                {
+                    concrete: pool
+                },
+                {
+                    concrete: uuidGenerator
+                },
+                {
+                    internal: "Logger"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
         key: "MyInventoryRepository",
         Class: MyInventoryRepositoryPostgre,
         parameter: {
