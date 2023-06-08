@@ -14,8 +14,7 @@ module.exports = {
             program_id: {
                 type: "varchar(40)",
                 notNull: true,
-                references: "programs(id)",
-                unique: true
+                references: "programs(id)"
             },
             created_at: {
                 type: "timestamp",
@@ -28,9 +27,13 @@ module.exports = {
                 default: pgm.func("current_timestamp")
             }
         })
+        pgm.addConstraint("user_programs", "unique_user_program_id_in_user_programs", {
+            unique: ["user_id", "program_id"]
+        })
     },
 
     down: (pgm) => {
+        pgm.dropConstraint("user_programs", "unique_user_program_id_in_user_programs")
         pgm.dropTable("user_programs")
     }
 }
