@@ -5,6 +5,7 @@ import workoutRouter from "@delivery/http/api/v1/routers/program_workout/workout
 import myProgress from "@delivery/http/api/v1/routers/program_workout/my_exercise_progress.routes"
 import myProgram from "@delivery/http/api/v1/routers/program_workout/my_program.routes"
 import predictRouter from "@delivery/http/api/v1/routers/food_predict/index.routes"
+import userPropRouter from "@delivery/http/api/v1/routers/user/user_properti.routes"
 
 const router = express.Router()
 
@@ -14,5 +15,6 @@ router.use("/my-program", myProgram)
 router.use("/programs", programRouter)
 router.use("/workouts", workoutRouter)
 router.use("/predict", predictRouter)
+router.use("/users", userPropRouter)
 
 export default router

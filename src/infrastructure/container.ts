@@ -28,6 +28,8 @@ import { GoogleCloudStorageService } from "./storage/CloudStorageService"
 import { FoodRepositoryPostgre } from "./repository/FoodRepositoryPostgre"
 import { UserProgramRepositoryPostgre } from "./repository/UserProgramRepositoryPostgre"
 import { MyProgramUseCase } from "@application/usecase/my_progress/MyProgramUseCase"
+import { UserPropertiesRepositoryPostgre } from "./repository/UserPropertiRepositoyPostgre"
+import { TDECalculationUseCase } from "@application/user/usecase/TDECalculationUseCase"
 
 const container = createContainer()
 
@@ -474,6 +476,23 @@ container.register([
                 },
                 {
                     internal: "UserRepository"
+                },
+                {
+                    internal: "Logger"
+                }
+            ]
+        }
+    }
+])
+
+container.register([
+    {
+        key: "TDECalculationUseCase",
+        Class: TDECalculationUseCase,
+        parameter: {
+            dependencies: [
+                {
+                    internal: "UserPropertiesRepository"
                 },
                 {
                     internal: "Logger"
