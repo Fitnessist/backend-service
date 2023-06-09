@@ -495,6 +495,9 @@ container.register([
                     internal: "UserPropertiesRepository"
                 },
                 {
+                    internal: "ProgramRepository"
+                },
+                {
                     internal: "Logger"
                 }
             ]

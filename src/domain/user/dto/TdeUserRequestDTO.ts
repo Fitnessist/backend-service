@@ -10,6 +10,7 @@ export interface TdeUserRequestDTO {
     activity?: string
     fat?: number
     user_id: string
+    program_id: string
 }
 
 export class TdeUserRequestDTO {
@@ -22,6 +23,7 @@ export class TdeUserRequestDTO {
     public fat?: number
     public user_id: string
     public weight_target: number
+    public program_id: string
 
     constructor (dto: TdeUserRequestDTO) {
         this._validatePayload(dto)
@@ -35,6 +37,7 @@ export class TdeUserRequestDTO {
         this.fat = dto.fat
         this.user_id = dto.user_id
         this.weight_target = dto.weight_target
+        this.program_id = dto.program_id
     }
 
     private _validatePayload (dto: TdeUserRequestDTO): void {
@@ -46,7 +49,8 @@ export class TdeUserRequestDTO {
             activity: { type: "string", optional: true },
             fat: { type: "number", optional: true },
             user_id: { type: "string", optional: false },
-            weight_target: { type: "number", optional: true }
+            weight_target: { type: "number", optional: true },
+            program_id: { type: "string", optional: false }
         }
         const validator = new Validator()
         const validationResult = validator.validate(dto, schema)

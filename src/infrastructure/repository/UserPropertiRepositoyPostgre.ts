@@ -27,15 +27,44 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
             const userProperties: UserProperti = result.rows[0]
             return userProperties
         } catch (error: any) {
-            this.logger.error(`Error during getting data: ${String(error.stack)}`)
+            this.logger.error(
+                `Error during getting data: ${String(error.stack)}`
+            )
             return null
         }
     }
 
-    public async create (userProperties: UserProperti): Promise<UserProperti | null> {
+    public async create (
+        userProperties: UserProperti
+    ): Promise<UserProperti | null> {
         const query: QueryConfig = {
-            text: "INSERT INTO user_properties (id, gender, age, weight, height, user_id, calories_each_day, activity, fat, calories_each_day_target , weight_target) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
-            values: [this.idGenerator(), userProperties.gender, userProperties.age, userProperties.weight, userProperties.height, userProperties.userId, userProperties.caloriesEachDay, userProperties.activity, userProperties.fat, userProperties.caloriesEachDayTarget, userProperties.weightTarget]
+            text: `
+             INSERT INTO user_properties 
+                ( id, 
+                    gender, 
+                    age, 
+                    weight, 
+                    height, 
+                    user_id, 
+                    calories_each_day, 
+                    activity, 
+                    fat, 
+                    calories_each_day_target , 
+                    weight_target
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+            values: [
+                this.idGenerator(),
+                userProperties.gender,
+                userProperties.age,
+                userProperties.weight,
+                userProperties.height,
+                userProperties.userId,
+                userProperties.caloriesEachDay,
+                userProperties.activity,
+                userProperties.fat,
+                userProperties.caloriesEachDayTarget,
+                userProperties.weightTarget
+            ]
         }
         try {
             const result = await this.pool.query(query)
@@ -57,7 +86,9 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
             })
             return insertedUserProperties
         } catch (error: any) {
-            this.logger.error(`Error during creating data: ${String(error.stack)}`)
+            this.logger.error(
+                `Error during creating data: ${String(error.stack)}`
+            )
             return null
         }
     }
@@ -72,7 +103,9 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
             const userPropertiesList: UserProperti[] = result.rows
             return userPropertiesList
         } catch (error: any) {
-            this.logger.error(`Error during getting data: ${String(error.stack)}`)
+            this.logger.error(
+                `Error during getting data: ${String(error.stack)}`
+            )
             return []
         }
     }
@@ -90,7 +123,9 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
             const userProperties: UserProperti = result.rows[0]
             return userProperties
         } catch (error: any) {
-            this.logger.error(`Error during getting data: ${String(error.stack)}`)
+            this.logger.error(
+                `Error during getting data: ${String(error.stack)}`
+            )
             return null
         }
     }

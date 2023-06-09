@@ -14,7 +14,9 @@ export class UserPropertiController {
     }
 
     calculateTDE (req: Request, res: Response, next: NextFunction): void {
-        const dto: TdeUserRequestDTO = new TdeUserRequestDTO({ ...req.body })
+        const user = req.currentUser
+
+        const dto: TdeUserRequestDTO = new TdeUserRequestDTO({ ...req.body, user_id: user?.id })
         this.tdeCalculationUseCase.calculateTDE(dto).then((data) => {
             sendSuccess(res, 200, data, "OK")
         }).catch((error: any) => {

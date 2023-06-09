@@ -51,7 +51,6 @@ export class GoogleCloudStorageService implements CloudStorageService {
 
         // Mengembalikan URL publik file yang di-upload
         const publicUrl = `https://storage.googleapis.com/${this.bucketName}/${fileName}`
-        console.log(publicUrl)
         return publicUrl
     }
 }
