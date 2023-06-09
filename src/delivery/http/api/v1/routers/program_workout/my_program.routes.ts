@@ -12,5 +12,6 @@ const myProgramUC = container.getInstance(
 const controller = new MyProgramController(myProgramUC)
 
 router.post("/", authorizationMiddleware, controller.addMyProgram)
+router.get("/", authorizationMiddleware, controller.getMyProgramWithIdByUserId)
 
 export default router

@@ -13,8 +13,29 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
         this.idGenerator = idGenerator
     }
 
-    async findById (id: string): Promise<MyProgram | null> {
-        throw new Error("not implemented function findById: " + __filename)
+    async findByUserIdAndWorkoutId (userId: string, workoutId: string): Promise<MyProgram | null> {
+        try {
+            const query: QueryConfig = {
+                text: `
+                    SELECT * 
+                    FROM user_programs UP
+                    WHERE UP.user_id = $1 
+                    AND UP.program_id = $2
+                    LIMIT 1
+                `,
+                values: [userId, workoutId]
+            }
+            const result = await this.pool.query(query)
+            if (result.rowCount <= 0) {
+                return null
+            }
+            const data = result.rows[0]
+            const myProgram = new MyProgram(data.id, data.user_id, data.program_id, data.exercise_completed_counter)
+            return myProgram
+        } catch (error: any) {
+            console.log(error)
+            throw error
+        }
     }
 
     async create (userProgram: MyProgram): Promise<MyProgram> {
