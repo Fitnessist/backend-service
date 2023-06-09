@@ -16,6 +16,10 @@ module.exports = {
                 notNull: true,
                 references: "programs(id)"
             },
+            is_finished: {
+                type: "boolean",
+                default: false
+            },
             created_at: {
                 type: "timestamp",
                 notNull: true,
