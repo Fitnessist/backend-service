@@ -13,24 +13,66 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
         this.idGenerator = idGenerator
     }
 
-    async findByUserIdAndWorkoutId (userId: string, workoutId: string): Promise<MyProgram | null> {
+    async findByUserIdAndProgramId (userId: string, programId: string): Promise<MyProgram | null> {
         try {
             const query: QueryConfig = {
                 text: `
-                    SELECT * 
+                    SELECT 
+                        UP.id,
+                        UP.user_id,
+                        UP.program_id,
+                        UP.created_at as user_programs_created_at,
+                        UP.updated_at as user_programs_updated_at,
+                        UP.total_workouts as total_workouts,
+                        UP.total_exercises as total_exercises,
+                        UP.exercise_completed_counter as exercise_completed_counter,
+                        (
+                            SELECT COUNT(*)
+                            FROM user_completed_workouts UCW
+                            WHERE UCW.user_id = $1 
+                            AND UCW.my_program_id = $2
+                        ) AS workout_completed_counter,
+                        P.id AS program_id,
+                        P.title
                     FROM user_programs UP
+                    JOIN programs P 
+                        ON P.id = UP.program_id
                     WHERE UP.user_id = $1 
                     AND UP.program_id = $2
-                    LIMIT 1
                 `,
-                values: [userId, workoutId]
+                values: [userId, programId]
             }
             const result = await this.pool.query(query)
             if (result.rowCount <= 0) {
                 return null
             }
+
             const data = result.rows[0]
             const myProgram = new MyProgram(data.id, data.user_id, data.program_id, data.exercise_completed_counter)
+            myProgram.totalExercises = data.total_exercises
+            myProgram.totalWorkouts = data.total_workouts
+            myProgram.workoutCompletedCounter = data.workout_completed_counter
+
+            const totalWorkoutsQuery: QueryConfig = {
+                text: `
+                    SELECT COUNT(*) as total_workouts
+                    FROM workouts
+                    WHERE program_id = $1
+                `,
+                values: [programId]
+            }
+            const totalWorkouts = await this.pool.query(totalWorkoutsQuery)
+            if (totalWorkouts.rowCount <= 0) {
+                return null
+            }
+
+            const program = new Program(data.program_id, data.title)
+            program.totalWorkouts = totalWorkouts.rows[0].total_workouts
+            if (myProgram.workoutCompletedCounter !== undefined && program.totalWorkouts !== undefined) {
+                myProgram.progressPercent = myProgram.workoutCompletedCounter / program.totalWorkouts
+            }
+
+            myProgram.program = program
             return myProgram
         } catch (error: any) {
             console.log(error)
@@ -40,23 +82,50 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
 
     async create (userProgram: MyProgram): Promise<MyProgram> {
         try {
+            const totalExerciseQ = {
+                text: `
+                    SELECT COUNT(DISTINCT exercises.id) as total
+                    FROM exercises JOIN workouts ON workouts.id = exercises.workout_id 
+                    WHERE workouts.program_id = $1
+                   `,
+                values: [
+                    userProgram.programId
+                ]
+            }
+
+            const totalWorkoutQ = {
+                text: `
+                    SELECT COUNT(DISTINCT exercises.id) as total
+                    FROM exercises JOIN workouts ON workouts.id = exercises.workout_id 
+                    WHERE workouts.program_id = $1
+                   `,
+                values: [
+                    userProgram.programId
+                ]
+            }
+
+            const totalWorkoutPromise = this.pool.query(totalWorkoutQ)
+            const totalExercisePromise = this.pool.query(totalExerciseQ)
+            const [totalWorkout, totalExercise] = await Promise.all([totalWorkoutPromise, totalExercisePromise])
+
             const query: QueryConfig = {
                 text: `
-            INSERT INTO user_programs (id, user_id, program_id)
-            VALUES ($1, $2, $3)
-            RETURNING *
-        `,
+                INSERT INTO user_programs (id, user_id, program_id, total_exercises, total_workouts)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING *
+            `,
                 values: [
                     this.idGenerator(),
                     userProgram.userId,
-                    userProgram.programId
+                    userProgram.programId,
+                    totalExercise.rows[0].total,
+                    totalWorkout.rows[0].total
                 ]
             }
 
             const result = await this.pool.query(query)
             const insertedUserProgram: MyProgram = userProgram
             insertedUserProgram.id = result.rows[0].id
-
             return insertedUserProgram
         } catch (error: any) {
             if (error instanceof DatabaseError && error.constraint != null) {
@@ -72,6 +141,9 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
             SELECT 
                 UP.id as user_program_id
                 UP.user_id,
+                UP.total_workouts,
+                UP.total_exercises,
+                UP.progress_percent,
                 P.id as program_id,
                 P.title
             FROM user_programs UP

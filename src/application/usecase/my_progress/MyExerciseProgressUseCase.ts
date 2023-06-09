@@ -3,6 +3,7 @@ import { ValidationException } from "@common/exceptions/ValidationException"
 import { type MyExerciseProgressDTO } from "@domain/my_progress/dto/MyExerciseProgressDTO"
 import { MyExerciseProgressResponseDTO } from "@domain/my_progress/dto/MyExerciseProgressResponseDTO"
 import { MyExerciseProgress } from "@domain/my_progress/entity/MyExerciseProgress"
+import { type MyProgramRepository } from "@domain/my_progress/repository/MyProgramRepository"
 import { type MyProgressRepository } from "@domain/my_progress/repository/MyProgressRepository"
 import { type UserRepository } from "@domain/user/repository/UserRepository"
 import { type IExerciseLevelRepository } from "@domain/workout/repository/ExerciseLevelRepository"
@@ -14,6 +15,7 @@ export class MyExerciseProgressUseCase {
     private readonly userRepo: UserRepository
     private readonly workokutRepo: IWorkoutRepository
     private readonly exerciseLvlRepo: IExerciseLevelRepository
+    private readonly myProgramRepo: MyProgramRepository
     private readonly logger: Logger
 
     constructor (
@@ -21,12 +23,14 @@ export class MyExerciseProgressUseCase {
         userRepo: UserRepository,
         workoutRepo: IWorkoutRepository,
         exerciseLevelRepo: IExerciseLevelRepository,
+        myProgramRepo: MyProgramRepository,
         logger: Logger
     ) {
         this.myProgressRepository = myProgressRepository
         this.userRepo = userRepo
         this.workokutRepo = workoutRepo
         this.exerciseLvlRepo = exerciseLevelRepo
+        this.myProgramRepo = myProgramRepo
         this.logger = logger
     }
 
@@ -67,10 +71,12 @@ export class MyExerciseProgressUseCase {
                 myProgressDTO.exerciseLevelId
             )
 
-            const [user, workout, exericseLevel] = await Promise.all([
+            const myProgramPromise = this.myProgramRepo.findByProgramId(myProgressDTO.programId)
+            const [user, workout, exericseLevel, myProgram] = await Promise.all([
                 userPromise,
                 workoutPromise,
-                exerciseLevelPromise
+                exerciseLevelPromise,
+                myProgramPromise
             ])
 
             const errors = []
@@ -92,6 +98,13 @@ export class MyExerciseProgressUseCase {
                 const error = {
                     field: "exercise_level_id",
                     message: "exercise_level_id not found"
+                }
+                errors.push(error)
+            }
+            if (myProgram == null) {
+                const error = {
+                    field: "program_id",
+                    message: "this program_id doesn't the choosen program"
                 }
                 errors.push(error)
             }

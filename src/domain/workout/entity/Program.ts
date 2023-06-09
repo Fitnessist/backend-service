@@ -5,6 +5,7 @@ export default class Program {
     public id: string
     public title: string
     public workouts?: Workout[]
+    public totalWorkouts?: number
     public user?: User
 
     constructor (

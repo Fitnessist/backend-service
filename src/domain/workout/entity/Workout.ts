@@ -5,6 +5,7 @@ class Workout {
     public programId: string
     public day: number
     public exercises?: Exercise[]
+    public totalExercises?: number
 
     constructor (
         id: string,

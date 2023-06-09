@@ -6,6 +6,7 @@ class WorkoutResponseDTO {
     public program_id: string
     public day: number
     public exercises?: ExerciseResponseDTO[]
+    public total_exercises?: number
 
     constructor (payload: Workout) {
         this.id = payload.id
@@ -15,6 +16,7 @@ class WorkoutResponseDTO {
             payload.exercises !== undefined
                 ? payload.exercises.map((data) => new ExerciseResponseDTO(data))
                 : []
+        this.total_exercises = payload.totalExercises
     }
 }
 
