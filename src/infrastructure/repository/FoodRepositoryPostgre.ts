@@ -43,7 +43,11 @@ export class FoodRepositoryPostgre implements FoodRepository {
                 H.image_url,
                 H.created_at,
                 H.updated_at,
-                H.food_id
+                H.food_id,
+                H.food_name,
+                H.calories_per_100gr,
+                H.total_grams,
+                H.total_calories
             FROM user_food_histories H
             JOIN users U ON U.id = H.user_id
             WHERE H.user_id = $1 
@@ -87,21 +91,21 @@ export class FoodRepositoryPostgre implements FoodRepository {
                     food_id, 
                     food_name, 
                     total_grams, 
-                    total_calories_per_100gr,
+                    calories_per_100gr,
                     total_calories
                 )
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                 RETURNING *
             `,
             values: [
-                payload.id === "" ? this.idGenerator() : payload.id,
+                this.idGenerator(),
                 payload.userId,
-                payload.imageUrl ?? null,
-                payload.foodId ?? null,
-                payload.foodName ?? null,
-                payload.totalGrams ?? null,
-                payload.caloriesPer100gr ?? null,
-                payload.totalCalories ?? null
+                payload.imageUrl,
+                payload.foodId,
+                payload.foodName,
+                payload.totalGrams,
+                payload.caloriesPer100gr,
+                payload.totalCalories
             ]
         }
         const result = await this.pool.query(q)

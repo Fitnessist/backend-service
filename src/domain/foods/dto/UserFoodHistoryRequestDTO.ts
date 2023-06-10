@@ -26,7 +26,7 @@ export class UserFoodHistoryRequestDTO {
         const schema: any = {
             user_id: { type: "string", optional: false },
             image_url: { type: "string", optional: true },
-            food_name: { type: "string", optional: true },
+            food_name: { type: "string", optional: false },
             food_id: { type: "string", optional: true },
             total_grams: { type: "number", optional: true },
             calories_per_100gr: { type: "number", optional: true },

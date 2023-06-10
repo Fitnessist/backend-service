@@ -9,6 +9,8 @@ export class UserFoodHistoryResponseDTO {
     public total_grams?: number
     public calories_per_100gr?: number
     public total_calories?: number
+    public created_at?: Date
+    public updated_at?: Date
 
     constructor (payload: UserFoodHistory) {
         this.id = payload.id
@@ -19,5 +21,7 @@ export class UserFoodHistoryResponseDTO {
         this.total_calories = payload.totalCalories
         this.total_grams = payload.totalGrams
         this.calories_per_100gr = payload.caloriesPer100gr
+        this.created_at = payload.createdAt
+        this.updated_at = payload.updatedAt
     }
 }

@@ -9,7 +9,7 @@ module.exports = {
                 type: "integer",
                 notNull: false
             },
-            total_calories_per_100gr: {
+            calories_per_100gr: {
                 type: "integer",
                 notNull: false
             },
