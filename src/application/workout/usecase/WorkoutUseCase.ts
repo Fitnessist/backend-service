@@ -57,11 +57,12 @@ export default class WorkoutUseCase {
                 workoutsPromise
             ])
 
-            const dataS = workouts.map((program) => {
+            const dataS = workouts.map((data) => {
+                const workout = new WorkoutResponseDTO(data)
                 return {
-                    ...program,
+                    ...workout,
                     links: {
-                        self: `${baseUrl}/api/v1/workouts/${program.id}`
+                        self: `${baseUrl}/api/v1/workouts/${data.id}`
                     }
                 }
             })
