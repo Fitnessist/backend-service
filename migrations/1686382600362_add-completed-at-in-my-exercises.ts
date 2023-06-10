@@ -9,5 +9,5 @@ exports.up = (pgm) => {
 }
 
 exports.down = (pgm) => {
-    pgm.dropColumns("my_exercise_progress", ["is_finished"])
+    pgm.dropColumns("my_exercise_progress", ["completed_at"])
 }

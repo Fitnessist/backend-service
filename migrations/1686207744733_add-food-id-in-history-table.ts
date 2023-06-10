@@ -3,9 +3,7 @@ module.exports = {
         pgm.addColumns("user_food_histories", {
             food_id: {
                 type: "varchar(40)",
-                references: "foods(id)",
-                notNull: false,
-                onDelete: "CASCADE"
+                notNull: false
             }
         })
         pgm.sql(`

@@ -8,12 +8,12 @@ import { type Logger } from "@infrastructure/log/Logger"
 import os from "os"
 
 const router = express.Router()
-const foodPredictRouter = container.getInstance(
+const foodPredictUseCase = container.getInstance(
     "FoodPredictUseCase"
 ) as FoodPredictUseCase
 const log = container.getInstance("Logger") as Logger
 
-const controller = new FoodPredictController(foodPredictRouter, log)
+const controller = new FoodPredictController(foodPredictUseCase, log)
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -23,6 +23,8 @@ const upload = multer({
         fieldSize: 1 * 1024 * 1024 // 1 MB dalam bentuk bytes
     }
 })
-router.post("/", authorizationMiddleware, upload.single("food_image"), controller.predictFoodImage)
+router.post("/predict", authorizationMiddleware, upload.single("food_image"), controller.predictFoodImage)
+router.post("/my-histories", authorizationMiddleware, controller.addFoodForUser)
+router.get("/my-histories", authorizationMiddleware, controller.getFoodHistoryByUserId)
 
 export default router

@@ -2,7 +2,7 @@ module.exports = {
     up: (pgm) => {
         pgm.createTable("user_food_histories", {
             id: {
-                type: "serial",
+                type: "varchar(40)",
                 notNull: true,
                 primaryKey: true
             },
