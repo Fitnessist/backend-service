@@ -3,11 +3,10 @@ module.exports = {
         pgm.addColumns("user_food_histories", {
             food_id: {
                 type: "varchar(40)",
-                references: "foods(id)",
-                notNull: false,
-                onDelete: "CASCADE"
+                notNull: false
             }
         })
+
         pgm.sql(`
         CREATE OR REPLACE FUNCTION validate_food_id() RETURNS TRIGGER AS $$
         BEGIN
@@ -17,6 +16,9 @@ module.exports = {
             END IF;
           END IF;
           RETURN NEW;
+        EXCEPTION
+          WHEN others THEN
+          RETURN NULL;
         END;
         $$ LANGUAGE plpgsql;
       `)
