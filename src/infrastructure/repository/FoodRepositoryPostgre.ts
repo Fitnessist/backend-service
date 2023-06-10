@@ -34,6 +34,28 @@ export class FoodRepositoryPostgre implements FoodRepository {
         return food
     }
 
+    public async findById (id: string): Promise<Food | null> {
+        const q: QueryConfig = {
+            text: `
+                    SELECT *
+                    FROM foods
+                    WHERE foods.id = $1
+                    LIMIT 1
+                `,
+            values: [id]
+        }
+        const result = await this.pool.query(q)
+
+        if (result.rowCount <= 0) {
+            return null
+        }
+
+        const row = result.rows[0]
+
+        const food = new Food(row.id, row.food_name, row.calories_per_100gr)
+        return food
+    }
+
     public async getFoodHistoryByUserId (userId: string, date?: string): Promise<UserFoodHistory[] | null> {
         const query: QueryConfig = {
             text: `
@@ -57,7 +79,6 @@ export class FoodRepositoryPostgre implements FoodRepository {
         }
 
         const result = await this.pool.query(query)
-        console.log("q result", result)
         if (result.rowCount <= 0) {
             return null
         }
@@ -101,7 +122,7 @@ export class FoodRepositoryPostgre implements FoodRepository {
                 this.idGenerator(),
                 payload.userId,
                 payload.imageUrl,
-                payload.foodId,
+                payload.foodId ?? null,
                 payload.foodName,
                 payload.totalGrams,
                 payload.caloriesPer100gr,

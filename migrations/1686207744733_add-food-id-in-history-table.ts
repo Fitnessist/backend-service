@@ -6,6 +6,7 @@ module.exports = {
                 notNull: false
             }
         })
+
         pgm.sql(`
         CREATE OR REPLACE FUNCTION validate_food_id() RETURNS TRIGGER AS $$
         BEGIN
@@ -15,6 +16,9 @@ module.exports = {
             END IF;
           END IF;
           RETURN NEW;
+        EXCEPTION
+          WHEN others THEN
+          RETURN NULL;
         END;
         $$ LANGUAGE plpgsql;
       `)

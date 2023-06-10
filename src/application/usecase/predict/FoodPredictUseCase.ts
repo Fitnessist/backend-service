@@ -113,7 +113,6 @@ export class FoodPredictUseCase {
                 payload.total_calories = Math.round(
                     (payload.total_grams / 100) * payload.calories_per_100gr
                 )
-                console.log("total calories", payload.total_calories)
             }
             const userFoodHistory = new UserFoodHistory({
                 id: "",
@@ -125,7 +124,6 @@ export class FoodPredictUseCase {
                 caloriesPer100gr: payload.calories_per_100gr,
                 totalCalories: payload.total_calories
             })
-            console.log(userFoodHistory)
             const data = await this.foodRepo.addUserFoodHistory(
                 userFoodHistory
             )

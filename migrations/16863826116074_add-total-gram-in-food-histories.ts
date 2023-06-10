@@ -24,7 +24,7 @@ module.exports = {
         pgm.dropColumns("user_food_histories", [
             "food_name",
             "total_grams",
-            "total_calories_per_100gr",
+            "calories_per_100gr",
             "total_calories"
         ])
     }
