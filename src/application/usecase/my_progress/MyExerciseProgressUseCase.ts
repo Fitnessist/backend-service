@@ -63,13 +63,8 @@ export class MyExerciseProgressUseCase {
         try {
             // Perform any necessary validation or business logic before creating
             const userPromise = this.userRepo.findById(myProgressDTO.userId)
-            const workoutPromise = this.workokutRepo.findById(
-                myProgressDTO.workoutId
-            )
-
-            const exerciseLevelPromise = this.exerciseLvlRepo.findById(
-                myProgressDTO.exerciseLevelId
-            )
+            const workoutPromise = this.workokutRepo.findById(myProgressDTO.workoutId)
+            const exerciseLevelPromise = this.exerciseLvlRepo.findById(myProgressDTO.exerciseLevelId)
 
             const myProgramPromise = this.myProgramRepo.findByProgramId(myProgressDTO.programId)
             const [user, workout, exericseLevel, myProgram] = await Promise.all([
@@ -120,14 +115,13 @@ export class MyExerciseProgressUseCase {
                 exerciseLevelId: myProgressDTO.exerciseLevelId,
                 userId: myProgressDTO.userId
             })
-            const createdMyProgress = await this.myProgressRepository.create(
-                myProgress
-            )
+            const createdMyProgress = await this.myProgressRepository
+                .create(myProgress)
+
             const responseData = new MyExerciseProgressResponseDTO(createdMyProgress)
             return responseData
         } catch (error: any) {
-            // Handle any errors that occurred during the process
-            this.logger.error(error.message)
+            this.logger.error(error?.message)
             throw error
         }
     }

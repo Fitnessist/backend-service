@@ -73,7 +73,7 @@ class ExerciseRepositoryPostgre implements IExerciseRepository {
                 calories_burned,
                 points
             )
-            exercise.exerciseLevels.push(exerciseLevel)
+            exercise.exerciseLevels?.push(exerciseLevel)
         })
 
         const dataS: Exercise[] = Array.from(exerciseMap.values())

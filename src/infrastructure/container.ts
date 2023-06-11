@@ -379,6 +379,9 @@ container.register([
                     internal: "ExerciseLevelRepository"
                 },
                 {
+                    internal: "MyProgramRepository"
+                },
+                {
                     internal: "Logger"
                 }
             ]

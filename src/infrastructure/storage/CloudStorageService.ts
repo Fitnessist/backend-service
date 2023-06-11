@@ -17,7 +17,6 @@ export class GoogleCloudStorageService implements CloudStorageService {
             __dirname,
             "../../../credentials/credential.json"
         )
-        console.log("key path", keyPath)
 
         this.storage = new Storage({
             keyFilename: keyPath

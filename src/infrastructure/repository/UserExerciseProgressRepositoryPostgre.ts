@@ -132,7 +132,6 @@ export class UserExerciseProgressRepositoryImpl implements MyProgressRepository 
         myProgress: MyExerciseProgress
     ): Promise<MyExerciseProgress> {
         const client = await this.pool.connect()
-
         try {
             const query1: QueryConfig = {
                 text: `
@@ -174,9 +173,8 @@ export class UserExerciseProgressRepositoryImpl implements MyProgressRepository 
                             SELECT calories_burned
                             FROM exercise_levels
                             WHERE id = $4
-                        ),
-                    ),
-                   WHERE user_inventories.user_id = $1; 
+                        )
+                    )
                 `,
                 values: [
                     this.idGenerator(),
