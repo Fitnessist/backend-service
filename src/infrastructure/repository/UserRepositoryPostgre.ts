@@ -24,12 +24,8 @@ export class UserRepositoryPostgre implements UserRepositoryInterface {
                         U.username, 
                         U.name, 
                         U.email, 
-                        U.password,
-                        I.id as inventory_id,
-                        I.total_points,
-                        I.total_calories_burned
+                        U.password
                     FROM users  U
-                    JOIN user_inventories I ON I.user_id = U.id
                     WHERE U.id = $1 LIMIT 1
                 `,
                 values: [id]

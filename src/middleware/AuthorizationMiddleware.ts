@@ -42,10 +42,15 @@ export const authorizationMiddleware = (
             "UserRepository"
         ) as UserRepository
 
+        console.log("userId", userId)
         userRepo
             .findById(userId)
             .then((user) => {
-                if (user == null) throw new UnauthorizedException()
+                if (user == null) {
+                    const error = new UnauthorizedException()
+                    next(error)
+                    return
+                }
 
                 req.currentUser = user
                 next()

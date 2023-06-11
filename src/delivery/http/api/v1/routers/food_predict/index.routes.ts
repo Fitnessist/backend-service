@@ -5,7 +5,6 @@ import multer from "multer"
 import { type FoodPredictUseCase } from "@application/usecase/predict/FoodPredictUseCase"
 import { FoodPredictController } from "../../controllers/food_predict/FoodPredictController"
 import { type Logger } from "@infrastructure/log/Logger"
-import os from "os"
 
 const router = express.Router()
 const foodPredictUseCase = container.getInstance(
@@ -17,7 +16,7 @@ const controller = new FoodPredictController(foodPredictUseCase, log)
 
 const upload = multer({
     storage: multer.diskStorage({
-        destination: os.tmpdir()
+        destination: "/uploads"
     }),
     limits: {
         fieldSize: 1 * 1024 * 1024 // 1 MB dalam bentuk bytes
