@@ -112,15 +112,14 @@ export class MyExerciseProgressUseCase {
             if (errors.length > 0) {
                 throw new ValidationException(errors)
             }
-
-            const myProgress = MyExerciseProgress.builder()
-                .setUserId(myProgressDTO.userId)
-                .setProgramId(myProgressDTO.programId)
-                .setWorkoutId(myProgressDTO.workoutId)
-                .setExerciseId(myProgressDTO.exerciseId)
-                .setExerciseLevelId(myProgressDTO.exerciseLevelId)
-                .build()
-
+            const myProgress = new MyExerciseProgress({
+                id: "",
+                programId: myProgressDTO.programId,
+                workoutId: myProgressDTO.workoutId,
+                exerciseId: myProgressDTO.exerciseId,
+                exerciseLevelId: myProgressDTO.exerciseLevelId,
+                userId: myProgressDTO.userId
+            })
             const createdMyProgress = await this.myProgressRepository.create(
                 myProgress
             )

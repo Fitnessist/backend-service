@@ -1,23 +1,20 @@
 exports.up = (pgm) => {
     pgm.createTable("user_inventories", {
         id: {
-            type: "serial",
+            type: "varchar(40)",
             primaryKey: true
         },
         user_id: {
             type: "varchar(40)",
             notNull: true,
             references: "users(id)",
-            onDelete: "cascade",
-            unique: true
+            onDelete: "cascade"
         },
         total_points: {
-            type: "integer",
-            default: 0
+            type: "integer"
         },
         total_calories_burned: {
-            type: "integer",
-            default: 0
+            type: "integer"
         },
         created_at: {
             type: "timestamp",

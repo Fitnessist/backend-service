@@ -6,16 +6,23 @@ export class MyInventory {
     public totalPoints: number
     public totalCaloriesBurned: number
     public user?: User
+    public createdAt?: Date
+    public updatedAt?: Date
 
-    constructor (
-        id: string,
-        userId: string,
-        totalPoints: number,
+    constructor (payload: {
+        id: string
+        userId: string
+        totalPoints: number
         totalCaloriesBurned: number
-    ) {
-        this.id = id
-        this.userId = userId
-        this.totalPoints = totalPoints
-        this.totalCaloriesBurned = totalCaloriesBurned
+        user?: User
+        createdAt?: Date
+        updatedAt?: Date
+    }) {
+        this.id = payload.id
+        this.userId = payload.userId
+        this.totalPoints = payload.totalPoints
+        this.totalCaloriesBurned = payload.totalCaloriesBurned
+        this.createdAt = payload.createdAt
+        this.updatedAt = payload.updatedAt
     }
 }

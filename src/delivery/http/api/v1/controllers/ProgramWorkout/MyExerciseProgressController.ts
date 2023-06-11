@@ -4,6 +4,7 @@ import { type MyExerciseProgressUseCase } from "@application/usecase/my_progress
 import { sendError, sendSuccess } from "../ApiResponseHelper"
 import { HTTP_STATUS } from "@common/constants/HTTP_code"
 import { type MyInventoryUseCase } from "@application/usecase/my_progress/MyInventoryUseCase"
+import { UnauthorizedException } from "@common/exceptions/UnauthorizedException"
 
 export class MyExerciseProgressController {
     private readonly myExerciseProgressUseCase: MyExerciseProgressUseCase
@@ -32,6 +33,11 @@ export class MyExerciseProgressController {
     }
 
     public create (req: Request, res: Response, next: NextFunction): void {
+        const user = req.currentUser
+        if (user === undefined) {
+            const error = new UnauthorizedException()
+            next(error)
+        }
         const myExerciseProgressDTO = new MyExerciseProgressDTO(req.body)
 
         this.myExerciseProgressUseCase

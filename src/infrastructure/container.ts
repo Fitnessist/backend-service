@@ -16,7 +16,7 @@ import WorkoutRepositoryPostgre from "./repository/WorkoutRepositoryPostgre"
 import WorkoutUseCase from "@application/workout/usecase/WorkoutUseCase"
 import ExerciseUseCase from "@application/workout/usecase/ExerciseUseCase"
 import ExerciseRepositoryPostgre from "./repository/ExerciseRepositoryPostgre"
-import { MyProgressRepositoryImpl } from "./repository/MyProgressRepositoryPostgre"
+import { UserExerciseProgressRepositoryImpl } from "./repository/UserExerciseProgressRepositoryPostgre"
 import { MyExerciseProgressUseCase } from "@application/usecase/my_progress/MyExerciseProgressUseCase"
 import { MyExerciseProgressController } from "@delivery/http/api/v1/controllers/ProgramWorkout/MyExerciseProgressController"
 import { ExerciseLevelRepositoryPostgre } from "./repository/ExerciseLevelRepositoryPostgre"
@@ -275,7 +275,7 @@ container.register([
 container.register([
     {
         key: "MyProgressRepository",
-        Class: MyProgressRepositoryImpl,
+        Class: UserExerciseProgressRepositoryImpl,
         parameter: {
             dependencies: [
                 {

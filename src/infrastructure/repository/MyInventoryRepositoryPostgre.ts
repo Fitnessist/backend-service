@@ -23,7 +23,9 @@ export class MyInventoryRepositoryPostgre implements MyInventoryRepository {
                         U.password,
                         I.id as inventory_id,
                         I.total_points,
-                        I.total_calories_burned
+                        I.total_calories_burned,
+                        I.created_at as inventory_created_at,
+                        I.updated_at as inventory_updated_at,
                     FROM user_inventories I
                     JOIN users U ON I.user_id = U.id
                     WHERE U.id = $1 LIMIT 1
@@ -45,12 +47,14 @@ export class MyInventoryRepositoryPostgre implements MyInventoryRepository {
             row.email,
             row.name
         )
-        const myInventory = new MyInventory(
-            row.inventory_id,
-            row.user_id,
-            row.total_points,
-            row.total_calories_burned
-        )
+        const myInventory = new MyInventory({
+            id: row.inventory_id,
+            userId: row.user_id,
+            totalPoints: row.total_points,
+            totalCaloriesBurned: row.total_calories_burned,
+            createdAt: new Date(row.inventory_created_at),
+            updatedAt: new Date(row.inventory_updated_at)
+        })
         myInventory.user = user
 
         return myInventory

@@ -7,15 +7,15 @@ import ExerciseLevelResponseDTO from "@domain/workout/dto/ExerciseLevelResponseD
 
 export class MyExerciseProgressResponseDTO {
     public user_id: string
-    public user?: User | null
+    public user?: User
     public program_id: string
-    public program: Program | null
+    public program?: Program
     public workout_id: string
-    public workout?: Workout | null
+    public workout?: Workout
     public exercise_id: string
-    public exercise?: ExerciseResponseDTO | null
+    public exercise?: ExerciseResponseDTO
     public exercise_level_id: string
-    public exercise_levels?: ExerciseLevelResponseDTO | null
+    public exercise_levels?: ExerciseLevelResponseDTO
 
     constructor (payload: MyExerciseProgress) {
         this.user_id = payload.userId
@@ -26,7 +26,7 @@ export class MyExerciseProgressResponseDTO {
         this.program = payload.program
         this.user = payload.user
         this.workout = payload.workout
-        this.exercise = payload.exercise !== null ? new ExerciseResponseDTO(payload.exercise) : undefined
-        this.exercise_levels = payload.exerciseLevel !== null ? new ExerciseLevelResponseDTO(payload.exerciseLevel) : undefined
+        this.exercise = payload.exercise !== undefined ? new ExerciseResponseDTO(payload.exercise) : undefined
+        this.exercise_levels = payload.exerciseLevel !== undefined ? new ExerciseLevelResponseDTO(payload.exerciseLevel) : undefined
     }
 }
