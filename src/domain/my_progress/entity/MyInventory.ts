@@ -1,7 +1,7 @@
 import { type User } from "@domain/user/entity/User"
 
 export class MyInventory {
-    public id: string
+    public id?: string
     public userId: string
     public totalPoints: number
     public totalCaloriesBurned: number
@@ -10,7 +10,7 @@ export class MyInventory {
     public updatedAt?: Date
 
     constructor (payload: {
-        id: string
+        id?: string
         userId: string
         totalPoints: number
         totalCaloriesBurned: number

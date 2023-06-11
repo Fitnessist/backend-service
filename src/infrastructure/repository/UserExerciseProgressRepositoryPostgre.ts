@@ -125,7 +125,7 @@ export class UserExerciseProgressRepositoryImpl implements MyProgressRepository 
         exerciseId?: string
         exerciseLevelId?: string
     }): Promise<MyExerciseProgress | null> {
-        throw new Error()
+        throw new Error("NOT IMPLEMETEND FUNCTION" + __filename)
     }
 
     public async create (

@@ -37,8 +37,9 @@ export class MyExerciseProgressController {
         if (user === undefined) {
             const error = new UnauthorizedException()
             next(error)
+            return
         }
-        const myExerciseProgressDTO = new MyExerciseProgressDTO(req.body)
+        const myExerciseProgressDTO = new MyExerciseProgressDTO({ ...req.body, user_id: user.id })
 
         this.myExerciseProgressUseCase
             .create(myExerciseProgressDTO)
@@ -61,7 +62,9 @@ export class MyExerciseProgressController {
             return
         }
 
-        this.myInventoryUC.getInventory(req.currentUser.id)
+        const dateString = req.query.date
+
+        this.myInventoryUC.getInventory(req.currentUser, dateString !== undefined ? dateString as string : undefined)
             .then((data) => {
                 sendSuccess(res, HTTP_STATUS.OK, data, "OK")
             })
