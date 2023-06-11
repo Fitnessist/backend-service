@@ -29,7 +29,9 @@ export default class Server {
         this.server = http.createServer(this.app)
         this.logger = logger
         this.port = port
-        this.app.use(bodyParser.json())
+        this.app.use(bodyParser.json({
+            limit: "2mb"
+        }))
         this.app.use(morgan("combined"))
         this.errorHandler = new ErrorHandler()
     }

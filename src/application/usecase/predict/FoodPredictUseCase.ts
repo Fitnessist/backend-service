@@ -1,5 +1,4 @@
 import { HTTP_STATUS } from "@common/constants/HTTP_code"
-import { InternalServerErrorException } from "@common/exceptions/InternalServerErrorException"
 import { NotFoundException } from "@common/exceptions/NotFoundException"
 import { ValidationException } from "@common/exceptions/ValidationException"
 import { type ApiResponse } from "@delivery/http/api/v1/controllers/ApiResponseHelper"
@@ -11,7 +10,7 @@ import { type UserRepository } from "@domain/user/repository/UserRepository"
 import { type Logger } from "@infrastructure/log/Logger"
 import { type CloudStorageService } from "@infrastructure/storage/CloudStorageService"
 import { type AxiosInstance } from "axios"
-import fs from "fs"
+import isBase64 from "is-base64"
 import moment from "moment"
 
 export class FoodPredictUseCase {
@@ -36,35 +35,33 @@ export class FoodPredictUseCase {
     }
 
     public async predictFoodImage (
-        foodImage: Express.Multer.File,
+        foodImage: string,
         userId: string
     ): Promise<any> {
         try {
-            const file = foodImage?.path
-            if (file === undefined) {
-                const errors: any = [
-                    {
-                        type: "file",
-                        field: "food_image",
-                        message: "food image required"
-                    }
-                ]
-                throw new ValidationException(errors)
+            // Validasi MIME type
+            if (!isBase64(foodImage, {
+                allowMime: true,
+                allowEmpty: false
+            })) {
+                throw new ValidationException([{
+                    field: "food_image",
+                    message: "food image not valid base64 string"
+                }])
             }
 
-            const fileData = fs.readFileSync(file)
+            const buffer = Buffer.from(foodImage, "base64")
 
-            // Mengonversi file menjadi base64 menggunakan Buffer
-            const base64String = Buffer.from(fileData).toString("base64")
-
-            // Mengonversi file buffer menjadi base64 string
-            if (base64String === undefined) {
-                throw new InternalServerErrorException()
+            // Validasi ukuran file
+            const maxSizeInBytes = 1024 * 1024 // Ukuran maksimal 2 MB
+            if (buffer.length > maxSizeInBytes) {
+                throw new ValidationException([{
+                    field: "food_image",
+                    message: "food image not valid, max dim 2mb"
+                }])
             }
             // const publicUrlUploadedImage = await this.storageService.uploadFile(foodImage, "users_foods")
-            if (fs.existsSync(file)) {
-                fs.unlinkSync(file)
-            }
+
             const predictModelServiceURL =
                 process.env.FOOD_PREDICT_MODEL_SERVICE_URL
 
@@ -77,7 +74,7 @@ export class FoodPredictUseCase {
             }
 
             const httpJsonBody: any = {
-                image: base64String
+                image: foodImage
             }
 
             // const uploadPromise = this.storageService.uploadFile(foodImage, "users_foods")
@@ -150,9 +147,7 @@ export class FoodPredictUseCase {
             errors.push(error)
             throw new ValidationException(errors)
         }
-        const formattedDate = moment(date, "DD-MM-YYYY").format(
-            "YYYY-MM-DD"
-        )
+        const formattedDate = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
         try {
             const results = await this.foodRepo.getFoodHistoryByUserId(
                 userId,
