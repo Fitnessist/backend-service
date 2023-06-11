@@ -25,8 +25,8 @@ export class FoodPredictController {
         next: NextFunction
     ): void {
         // base64String berisi file dalam format base64
-        const fileString = req.body.food_image
-        if (fileString === undefined) {
+        const file = req.file
+        if (file === undefined) {
             sendError(
                 res,
                 HTTP_STATUS.BAD_REQUEST,
