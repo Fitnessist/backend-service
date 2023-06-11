@@ -40,16 +40,12 @@ export class FoodPredictUseCase {
     ): Promise<any> {
         try {
             // Validasi MIME type
-            if (!isBase64(foodImage, {
-                allowMime: true,
-                allowEmpty: false
-            })) {
+            if (!isBase64(foodImage)) {
                 throw new ValidationException([{
                     field: "food_image",
                     message: "food image not valid base64 string"
                 }])
             }
-
             const buffer = Buffer.from(foodImage, "base64")
 
             // Validasi ukuran file
