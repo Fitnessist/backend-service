@@ -73,9 +73,12 @@ export class FoodRepositoryPostgre implements FoodRepository {
             FROM user_food_histories H
             JOIN users U ON U.id = H.user_id
             WHERE H.user_id = $1 
-            ${date !== undefined ? "AND DATE(H.created_at) = $2" : ""}
             `,
-            values: [userId, date]
+            values: [userId]
+        }
+        if (date !== undefined) {
+            query.text += "AND DATE(H.created_at) = $2"
+            query.values?.push(date)
         }
 
         const result = await this.pool.query(query)

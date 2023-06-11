@@ -59,7 +59,7 @@ export class TDECalculationUseCase {
         caloryEachDay = Math.round(caloryEachDay)
 
         let caloriesEachDayTarget = caloryEachDay
-        if (program.title.toLowerCase() === "menurunkan berat badan") {
+        if (program.title.toLowerCase().trim().includes("menurunkan berat badan")) {
             caloriesEachDayTarget -= 300
         } else {
             caloriesEachDayTarget += 500
