@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import request from "supertest"
 import server from "@test/App"
 import { WorkoutsTableTestHelper } from "@test/WorkoutsTableTestHelper"
@@ -39,20 +40,20 @@ describe("Workout Routes", () => {
             expect(response.body).toHaveProperty("data")
 
             const {
-                currentPage,
-                perPage,
-                totalPages,
-                totalItems,
+                current_page,
+                per_page,
+                total_pages,
+                total_items,
                 items
             } = response.body.data
 
-            expect(currentPage).toBe(1)
-            expect(perPage).toBe(10)
-            expect(totalPages).toBe(1)
-            expect(totalItems).toBe("1")
+            expect(current_page).toBe(1)
+            expect(per_page).toBe(10)
+            expect(total_pages).toBe(1)
+            expect(total_items).toBe("1")
             expect(items).toHaveLength(1)
             expect(items[0]).toHaveProperty("id", workout.id)
-            expect(items[0]).toHaveProperty("programId", workout.programId)
+            expect(items[0]).toHaveProperty("program_id", workout.programId)
             expect(items[0]).toHaveProperty("day", workout.day)
             expect(items[0]).toHaveProperty("links")
             expect(items[0].links).toHaveProperty("self")
@@ -83,7 +84,7 @@ describe("Workout Routes", () => {
             expect(response.body).toHaveProperty("status")
             expect(response.body).toHaveProperty("data")
             expect(response.body.data).toHaveProperty("id", workoutId)
-            expect(response.body.data).toHaveProperty("programId", programId)
+            expect(response.body.data).toHaveProperty("program_id", programId)
             expect(response.body.data).toHaveProperty("day", day)
         })
 
