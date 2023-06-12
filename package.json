@@ -12,7 +12,7 @@
     "start": "node dist/main/app.js",
     "start:dev": "concurrently --kill-others-on-fail \"npm run build:watch\" \"npm run dev\"",
     "test:unit": "jest --testMatch=**/__test__/*.test.ts --passWithNoTests --runInBand --no-cache",
-    "test:e2e": "jest --testMatch=**/e2e/**/*.test.ts --passWithNoTests  --runInBand --no-cache",
+    "test:e2e": "jest --testMatch=**/e2e/**/*.test.ts --passWithNoTests  --runInBand --no-cache --detectOpenHandles",
     "test:all": "jest --passWithNoTests  --runInBand --no-cache",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
     "test:staged": "npm run test:unit --findRelatedTests",
