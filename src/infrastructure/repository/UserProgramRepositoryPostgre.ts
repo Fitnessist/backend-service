@@ -100,13 +100,14 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
 
             const totalWorkoutQ = {
                 text: `
-                    SELECT COUNT(DISTINCT exercises.id) as total
-                    FROM exercises JOIN workouts ON workouts.id = exercises.workout_id 
+                    SELECT COUNT(*) as total
+                    FROM workouts
                     WHERE workouts.program_id = $1
                    `,
                 values: [userProgram.programId]
             }
 
+            console.log(__filename, "check 1")
             const totalWorkoutPromise = this.pool.query(totalWorkoutQ)
             const totalExercisePromise = this.pool.query(totalExerciseQ)
             const [totalWorkout, totalExercise] = await Promise.all([
@@ -114,6 +115,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
                 totalExercisePromise
             ])
 
+            console.log(__filename, "check 2")
             const query: QueryConfig = {
                 text: `
                 INSERT INTO user_programs (id, user_id, program_id, total_exercises, total_workouts)
@@ -129,6 +131,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
                 ]
             }
 
+            console.log(__filename, "check 3")
             const result = await this.pool.query(query)
             const insertedUserProgram: MyProgram = userProgram
             insertedUserProgram.id = result.rows[0].id
@@ -145,7 +148,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
         const query: QueryConfig = {
             text: `
             SELECT 
-                UP.id as user_program_id
+                UP.id as user_program_id,
                 UP.user_id,
                 UP.total_workouts,
                 UP.total_exercises,
@@ -153,7 +156,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
                 P.id as program_id,
                 P.title
             FROM user_programs UP
-            JOIN programs P ON UP.program_id = P.program_id
+            JOIN programs P ON UP.program_id = P.id
             WHERE UP.program_id = $1
             `,
             values: [programId]

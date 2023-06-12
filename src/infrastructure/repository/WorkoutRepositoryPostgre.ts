@@ -83,7 +83,7 @@ export default class WorkoutRepositoryPostgre implements IWorkoutRepository {
                     name: rowData.exercise_name,
                     workoutId: rowData.workout_id,
                     media: rowData.exercise_media,
-                    exerciseLevels: []
+                    exerciseLevels: undefined
                 })
             }
         })

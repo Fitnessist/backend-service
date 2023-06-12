@@ -8,7 +8,7 @@ import ExerciseLevel from "@domain/workout/entity/ExerciseLevel"
 import Workout from "@domain/workout/entity/Workout"
 import { type QueryConfig, type Pool, DatabaseError } from "pg"
 
-export class MyProgressRepositoryImpl implements MyProgressRepository {
+export class UserExerciseProgressRepositoryImpl implements MyProgressRepository {
     private readonly idGenerator: any
     private readonly pool: Pool
 
@@ -63,13 +63,14 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
                 let myProgress = myProgressListMap.get(row.progress_id)
 
                 if (myProgress == null || myProgress === undefined) {
-                    myProgress = MyExerciseProgress.builder()
-                        .setId(row.prograss_id)
-                        .setExerciseId(row.exercise_id)
-                        .setExerciseLevelId(row.exercise_level_id)
-                        .setProgramId(row.program_id)
-                        .setWorkoutId(row.workout_id)
-                        .build()
+                    myProgress = new MyExerciseProgress({
+                        id: row.id,
+                        programId: row.program_id,
+                        workoutId: row.workout_id,
+                        exerciseId: row.exercise_id,
+                        exerciseLevelId: row.exercise_level_id,
+                        userId: row.user_id
+                    })
                     myProgressListMap.set(row.id, myProgress)
                 }
 
@@ -124,47 +125,86 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
         exerciseId?: string
         exerciseLevelId?: string
     }): Promise<MyExerciseProgress | null> {
-        throw new Error()
+        throw new Error("NOT IMPLEMETEND FUNCTION" + __filename)
     }
 
     public async create (
         myProgress: MyExerciseProgress
     ): Promise<MyExerciseProgress> {
-        const q: QueryConfig = {
-            text: `
-            INSERT INTO my_exercise_progress (id, user_id, program_id, workout_id, exercise_id, exercise_level_id)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING *
-          `,
-            values: [
-                this.idGenerator(),
-                myProgress.userId,
-                myProgress.programId,
-                myProgress.workoutId,
-                myProgress.exerciseId,
-                myProgress.exerciseLevelId
-            ]
-        }
-
+        const client = await this.pool.connect()
         try {
-            const queryResult = await this.pool.query(q)
+            const query1: QueryConfig = {
+                text: `
+                INSERT INTO my_exercise_progress (
+                    id, 
+                    user_id, 
+                    program_id, 
+                    workout_id, 
+                    exercise_id, 
+                    exercise_level_id
+                )
+                VALUES ($1, $2, $3, $4, $5, $6)
+                RETURNING *
+            `,
+                values: [
+                    this.idGenerator(),
+                    myProgress.userId,
+                    myProgress.programId,
+                    myProgress.workoutId,
+                    myProgress.exerciseId,
+                    myProgress.exerciseLevelId
+                ]
+            }
+            await client.query("BEGIN")
+            const queryResult = await client.query(query1)
+
+            const queryInsertInventory: QueryConfig = {
+                text: `
+                    INSERT INTO user_inventories
+                        (id, user_id, total_points, total_calories_burned)
+                    VALUES (
+                        $1, $2, 
+                        (
+                            SELECT points
+                            FROM exercise_levels
+                            WHERE id = $3
+                        ),
+                        (
+                            SELECT calories_burned
+                            FROM exercise_levels
+                            WHERE id = $4
+                        )
+                    )
+                `,
+                values: [
+                    this.idGenerator(),
+                    myProgress.userId,
+                    myProgress.exerciseLevelId,
+                    myProgress.exerciseLevelId
+                ]
+            }
+            await client.query(queryInsertInventory)
+            await client.query("COMMIT")
             const createdProgress = queryResult.rows[0]
 
-            return MyExerciseProgress.builder()
-                .setId(createdProgress.id)
-                .setUserId(createdProgress.user_id)
-                .setProgramId(createdProgress.program_id)
-                .setWorkoutId(createdProgress.workout_id)
-                .setExerciseId(createdProgress.exercise_id)
-                .setExerciseLevelId(createdProgress.exercise_level_id)
-                .build()
+            const myExerciseProgres = new MyExerciseProgress({
+                id: createdProgress.id,
+                programId: createdProgress.program_id,
+                workoutId: createdProgress.workout_id,
+                exerciseId: createdProgress.exercise_id,
+                exerciseLevelId: createdProgress.exercise_level_id,
+                userId: createdProgress.user_id
+            })
+
+            return myExerciseProgres
         } catch (error: any) {
-            if (error instanceof DatabaseError) {
-                if (error.constraint != null) {
-                    throw new ConflictException("Data has already exist.")
-                }
+            await client.query("ROLLBACK")
+            if (error instanceof DatabaseError && error.constraint != null) {
+                throw new ConflictException("Data has already exist.")
             }
             throw error
+        } finally {
+            client.release()
         }
     }
 
@@ -191,14 +231,16 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
         const queryResult = await this.pool.query(q)
         const updatedProgress = queryResult.rows[0]
 
-        return MyExerciseProgress.builder()
-            .setId(updatedProgress.id)
-            .setUserId(updatedProgress.user_id)
-            .setProgramId(updatedProgress.program_id)
-            .setWorkoutId(updatedProgress.workout_id)
-            .setExerciseId(updatedProgress.exercise_id)
-            .setExerciseLevelId(updatedProgress.exercise_level_id)
-            .build()
+        const myExerciseProgres = new MyExerciseProgress({
+            id: updatedProgress.id,
+            programId: updatedProgress.program_id,
+            workoutId: updatedProgress.workout_id,
+            exerciseId: updatedProgress.exercise_id,
+            exerciseLevelId: updatedProgress.exercise_level_id,
+            userId: updatedProgress.user_id
+        })
+
+        return myExerciseProgres
     }
 
     public async GetUserInventory (userId: string): Promise<MyInventory | null> {
@@ -234,12 +276,12 @@ export class MyProgressRepositoryImpl implements MyProgressRepository {
             row.email,
             row.name
         )
-        const myInventory = new MyInventory(
-            row.inventory_id,
-            row.user_id,
-            row.total_points,
-            row.total_calories_burned
-        )
+        const myInventory = new MyInventory({
+            id: row.inventory_id,
+            userId: row.user_id,
+            totalPoints: row.total_points,
+            totalCaloriesBurned: row.total_calories_burned
+        })
         myInventory.user = user
 
         return myInventory

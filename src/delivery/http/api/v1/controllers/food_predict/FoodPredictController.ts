@@ -81,10 +81,10 @@ export class FoodPredictController {
             next(new UnauthorizedException())
             return
         }
-        const dateString = req.query.date as string
+        const dateString = req.query.date
 
         this.foodPredictUC
-            .getUserFoodHistory(user.id, dateString)
+            .getUserFoodHistory(user.id, dateString !== undefined ? dateString as string : undefined)
             .then((result) => {
                 sendSuccess(res, HTTP_STATUS.OK, result, "OK")
             }).catch((error: any) => {

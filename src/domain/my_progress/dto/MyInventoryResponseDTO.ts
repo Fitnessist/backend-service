@@ -2,7 +2,7 @@ import UserResponseDTO from "@domain/user/entity/UserResponseDTO"
 import { type MyInventory } from "../entity/MyInventory"
 
 export class MyInventoryResponseDTO {
-    public id: string
+    public id?: string
     public user_id: string
     public total_points: number
     public total_calories_burned: number

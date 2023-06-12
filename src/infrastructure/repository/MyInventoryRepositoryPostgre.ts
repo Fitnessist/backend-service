@@ -12,46 +12,55 @@ export class MyInventoryRepositoryPostgre implements MyInventoryRepository {
         this.idGenerator = idGenerator
     }
 
-    public async GetUserInventory (userId: string): Promise<MyInventory | null> {
+    public async GetUserInventory (userId: string, date?: string): Promise<MyInventory | null> {
         const q: QueryConfig = {
             text: `
                     SELECT 
-                        U.id AS user_id, 
-                        U.username, 
-                        U.name, 
-                        U.email, 
-                        U.password,
-                        I.id as inventory_id,
-                        I.total_points,
-                        I.total_calories_burned
+                        I.user_id,
+                        SUM(I.total_points) AS total_points,
+                        SUM(I.total_calories_burned) AS total_calories_burned
                     FROM user_inventories I
-                    JOIN users U ON I.user_id = U.id
-                    WHERE U.id = $1 LIMIT 1
+                    WHERE I.user_id = $1
                 `,
             values: [userId]
         }
+
+        if (date !== undefined && date !== "") {
+            q.text += "AND DATE(created_at) = $2"
+            q.values?.push(date)
+        }
+
+        q.text += "GROUP BY I.user_id"
+
         const result = await this.pool.query(q)
 
         if (result.rowCount <= 0) {
             return null
         }
 
-        const row = result.rows[0]
+        const queryUser: QueryConfig = {
+            text: `
+                    SELECT 
+                        users.id,
+                        users.name,
+                        users.username,
+                        users.email
+                    FROM users 
+                    WHERE users.id = $1
+                    LIMIT 1
+                `,
+            values: [userId]
+        }
 
-        const user = new User(
-            row.user_id,
-            row.username,
-            row.password,
-            row.email,
-            row.name
-        )
-        const myInventory = new MyInventory(
-            row.inventory_id,
-            row.user_id,
-            row.total_points,
-            row.total_calories_burned
-        )
-        myInventory.user = user
+        const userResult = await this.pool.query(queryUser)
+        const user = new User(userResult.rows[0].id, userResult.rows[0].username, "", userResult.rows[0].email, userResult.rows[0].name)
+
+        const myInventory = new MyInventory({
+            userId: result.rows[0].user_id,
+            totalPoints: result.rows[0].total_points,
+            totalCaloriesBurned: result.rows[0].total_calories_burned,
+            user
+        })
 
         return myInventory
     }

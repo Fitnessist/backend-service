@@ -60,6 +60,8 @@ export const authorizationMiddleware = (
             })
     } catch (error: any) {
         // Menangani exception jika terjadi Unauthorized
+        console.log("error message", error?.message)
+        console.log("error stack", error?.stack)
         next(error)
     }
 }

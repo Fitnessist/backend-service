@@ -63,13 +63,8 @@ export class MyExerciseProgressUseCase {
         try {
             // Perform any necessary validation or business logic before creating
             const userPromise = this.userRepo.findById(myProgressDTO.userId)
-            const workoutPromise = this.workokutRepo.findById(
-                myProgressDTO.workoutId
-            )
-
-            const exerciseLevelPromise = this.exerciseLvlRepo.findById(
-                myProgressDTO.exerciseLevelId
-            )
+            const workoutPromise = this.workokutRepo.findById(myProgressDTO.workoutId)
+            const exerciseLevelPromise = this.exerciseLvlRepo.findById(myProgressDTO.exerciseLevelId)
 
             const myProgramPromise = this.myProgramRepo.findByProgramId(myProgressDTO.programId)
             const [user, workout, exericseLevel, myProgram] = await Promise.all([
@@ -112,23 +107,21 @@ export class MyExerciseProgressUseCase {
             if (errors.length > 0) {
                 throw new ValidationException(errors)
             }
+            const myProgress = new MyExerciseProgress({
+                id: "",
+                programId: myProgressDTO.programId,
+                workoutId: myProgressDTO.workoutId,
+                exerciseId: myProgressDTO.exerciseId,
+                exerciseLevelId: myProgressDTO.exerciseLevelId,
+                userId: myProgressDTO.userId
+            })
+            const createdMyProgress = await this.myProgressRepository
+                .create(myProgress)
 
-            const myProgress = MyExerciseProgress.builder()
-                .setUserId(myProgressDTO.userId)
-                .setProgramId(myProgressDTO.programId)
-                .setWorkoutId(myProgressDTO.workoutId)
-                .setExerciseId(myProgressDTO.exerciseId)
-                .setExerciseLevelId(myProgressDTO.exerciseLevelId)
-                .build()
-
-            const createdMyProgress = await this.myProgressRepository.create(
-                myProgress
-            )
             const responseData = new MyExerciseProgressResponseDTO(createdMyProgress)
             return responseData
         } catch (error: any) {
-            // Handle any errors that occurred during the process
-            this.logger.error(error.message)
+            this.logger.error(error?.message)
             throw error
         }
     }

@@ -99,7 +99,9 @@ export class FoodPredictUseCase {
     ): Promise<UserFoodHistoryResponseDTO> {
         try {
             if (
-                payload.total_calories === undefined &&
+                (payload.total_calories === undefined ||
+                   payload.total_calories === 0
+                ) &&
                 payload.total_grams !== undefined &&
                 payload.calories_per_100gr !== undefined
             ) {
@@ -133,21 +135,13 @@ export class FoodPredictUseCase {
         userId: string,
         date?: string
     ): Promise<UserFoodHistoryResponseDTO[]> {
-        if (date === undefined || date == null) {
-            const errors = []
-            const error = {
-                type: "required",
-                field: "date",
-                message: "date is required and should be dd-MM-YYYY"
-            }
-            errors.push(error)
-            throw new ValidationException(errors)
+        if (date !== undefined && date !== null && date !== "") {
+            date = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
         }
-        const formattedDate = moment(date, "DD-MM-YYYY").format("YYYY-MM-DD")
         try {
             const results = await this.foodRepo.getFoodHistoryByUserId(
                 userId,
-                formattedDate
+                date !== undefined ? date : undefined
             )
             if (results === null) {
                 throw new NotFoundException()
