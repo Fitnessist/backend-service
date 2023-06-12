@@ -12,10 +12,9 @@ class WorkoutResponseDTO {
         this.id = payload.id
         this.program_id = payload.programId
         this.day = payload.day
+        this.exercises = []
         if (payload.exercises !== undefined && payload.exercises !== null && payload.exercises.length > 0) {
             this.exercises = payload.exercises.map((data) => new ExerciseResponseDTO(data))
-        } else {
-            this.exercises = []
         }
         this.total_exercises = payload.totalExercises
     }
