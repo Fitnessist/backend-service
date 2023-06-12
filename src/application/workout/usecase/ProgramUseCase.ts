@@ -38,20 +38,18 @@ export default class ProgramUseCase {
         const baseUrl = process.env.APP_HOST ?? "http://localhost"
 
         try {
-            const totalProgramPromise =
-                this.programRepository.countTotalItems()
-            const programsPromise = this.programRepository.getAll(
-                pageSize,
-                offset
-            )
+            const totalProgramPromise = this.programRepository.countTotalItems()
+            const programsPromise = this.programRepository.getAll(pageSize, offset)
+
             const [totalProgram, programs] = await Promise.all([
                 totalProgramPromise,
                 programsPromise
             ])
 
             const dataS = programs.map((program) => {
+                const resp = new ProgramResponseDTO(program)
                 return {
-                    ...program,
+                    ...resp,
                     links: {
                         self: `${baseUrl}/api/v1/programs/${program.id}`
                     }
