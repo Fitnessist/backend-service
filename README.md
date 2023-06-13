@@ -1,4 +1,7 @@
 # Fitnessist Webservice
+## Documentation
+- [Postman Documentation](https://documenter.getpostman.com/view/16615700/2s93m7WM7a)
+- [Figma Prototype](https://www.figma.com/proto/Wbmd8E63yvekPBa5Kp7msC/Fitnessist?page-id=0%3A1&type=design&node-id=74-1901&viewport=-255%2C578%2C0.26&scaling=scale-down&starting-point-node-id=87%3A1369&show-proto-sidebar=1)
 
 ## Prerequesite
 If you don't want to use the Docker. You have to install
@@ -101,8 +104,7 @@ $ npm test
 
 This will run the test suite and display the results in the console.
 
-## Documentation
-- [Postman Documentation](https://documenter.getpostman.com/view/16615700/2s93m7WM7a)
+
 
 ## Technologies and Libraries
 
