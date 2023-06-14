@@ -18,7 +18,8 @@ describe("TDECalculationUseCase", () => {
             findById: jest.fn(),
             create: jest.fn(),
             getAll: jest.fn(),
-            findByUserId: jest.fn()
+            findByUserId: jest.fn(),
+            update: jest.fn()
         }
         programRepo = {
             findById: jest.fn(),
@@ -49,7 +50,7 @@ describe("TDECalculationUseCase", () => {
             height: 180,
             user_id: "user-123",
             activity: "sedentary",
-            fat: 0.2,
+            fat: 20,
             weight_target: 75,
             program_id: "program-123"
         })
@@ -88,7 +89,7 @@ describe("TDECalculationUseCase", () => {
                 height: 180,
                 weight: 80,
                 activity: "sedentary",
-                fat: 0.2,
+                fat: 20,
                 caloriesEachDay: 2337,
                 weightTarget: 75,
                 caloriesEachDayTarget: 2837,
@@ -106,7 +107,7 @@ describe("TDECalculationUseCase", () => {
             height: 160,
             user_id: "user-456",
             activity: "moderately_active",
-            fat: 0.15,
+            fat: 15,
             weight_target: 55,
             program_id: "non-existing-program"
         });
