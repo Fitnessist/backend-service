@@ -1,5 +1,5 @@
-import { type User } from "../entity/User"
 import type UserProperti from "../entity/UserProperti"
+import UserResponseDTO from "../entity/UserResponseDTO"
 
 export interface TdeUserResponseDTO {
     id: string
@@ -13,7 +13,7 @@ export interface TdeUserResponseDTO {
     weight_target?: number
     calories_each_day?: number
     calories_each_day_target?: number
-    user?: User
+    user?: UserResponseDTO
 }
 
 export class TdeUserResponseDTO {
@@ -28,7 +28,7 @@ export class TdeUserResponseDTO {
     public weight_target?: number
     public calories_each_day?: number
     public calories_each_day_target?: number
-    public user?: User
+    public user?: UserResponseDTO
 
     constructor (dto: UserProperti) {
         this.id = dto.id
@@ -42,6 +42,6 @@ export class TdeUserResponseDTO {
         this.weight_target = dto.weightTarget
         this.calories_each_day = dto.caloriesEachDay
         this.calories_each_day_target = dto.caloriesEachDayTarget
-        this.user = dto.user
+        this.user = dto.user !== undefined ? new UserResponseDTO(dto.user) : undefined
     }
 }
