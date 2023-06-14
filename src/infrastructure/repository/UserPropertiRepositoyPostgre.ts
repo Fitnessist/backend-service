@@ -114,7 +114,7 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
         try {
             const query: QueryConfig = {
                 text: `SELECT 
-                        id, gender, age, weight, height, activity, fat, user_id 
+                       *
                     FROM user_properties 
                     WHERE user_id = $1 
                     LIMIT 1`,
@@ -125,8 +125,21 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
             if (result.rowCount === 0) {
                 return null
             }
+            const data = result.rows[0]
 
-            const userProperties: UserProperti = result.rows[0]
+            const userProperties: UserProperti = new UserProperti({
+                id: data.id,
+                age: data.age,
+                gender: data.gender,
+                weight: data.weight,
+                weightTarget: data.weight_target,
+                height: data.height,
+                fat: data.fat,
+                caloriesEachDay: data.calories_each_day,
+                caloriesEachDayTarget: data.calories_each_day_target,
+                activity: data.activity,
+                userId: data.user_id
+            })
             return userProperties
         } catch (error: any) {
             this.logger.error(
