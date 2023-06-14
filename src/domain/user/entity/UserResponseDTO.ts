@@ -14,6 +14,6 @@ export default class UserResponseDTO {
         this.username = username
         this.name = name
         this.email = email
-        this.my_inventory = myInventory
+        this.my_inventory = myInventory !== undefined ? myInventory : undefined
     }
 }
