@@ -48,7 +48,7 @@ export class AuthenticationUseCase {
         // Generate access token
         const accessToken = this.tokenService.generateAccessToken(user.id)
 
-        const refreshTokenExpires = 1 * 60 * 60 // 1 day = 3600 seconds
+        const refreshTokenExpires = 12 * 4 * 7 * 24 * 60 * 60 // 1 tahun
         // Generate refresh token
         const refreshToken = this.tokenService.generateRefreshToken(user.id, refreshTokenExpires)
         const refreshTokenExpiresInDate = new Date(new Date().getSeconds() + refreshTokenExpires)

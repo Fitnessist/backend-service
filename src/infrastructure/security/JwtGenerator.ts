@@ -6,14 +6,15 @@ export class JwtGenerator implements TokenService {
     private readonly secretKey: string
     private readonly expiresIn: string
 
-    constructor (secretKey: string = "123123131", expiresIn: string = "1h") {
+    constructor (secretKey: string = "123123131", expiresIn: string = "1y") {
         this.secretKey = secretKey
         this.expiresIn = expiresIn
     }
 
     generateAccessToken (userId: string): string {
         const payload: JwtPayload = {
-            jti: userId
+            jti: userId,
+            iss: "fitnessist app"
         }
 
         const token = jwt.sign(payload, this.secretKey, { expiresIn: this.expiresIn })
@@ -22,7 +23,8 @@ export class JwtGenerator implements TokenService {
 
     generateRefreshToken (userId: string, expiresDuration: string | number = "1d"): string {
         const payload: JwtPayload = {
-            jti: userId
+            jti: userId,
+            iss: "fitnessist app"
         }
         const jwtOpt: SignOptions = {
             expiresIn: expiresDuration
