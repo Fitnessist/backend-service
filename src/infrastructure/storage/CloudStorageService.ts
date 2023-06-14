@@ -32,6 +32,7 @@ export class GoogleCloudStorageService implements CloudStorageService {
 
         // Generate nama file unik
         const fileName =
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             folderName + "/" + Date.now().toString() + "-" + originalname
 
         const options: UploadOptions = {

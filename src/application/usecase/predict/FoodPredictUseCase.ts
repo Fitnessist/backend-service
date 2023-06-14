@@ -40,6 +40,7 @@ export class FoodPredictUseCase {
     ): Promise<any> {
         try {
             // Validasi MIME type
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (!isBase64(foodImage)) {
                 throw new ValidationException([{
                     field: "food_image",

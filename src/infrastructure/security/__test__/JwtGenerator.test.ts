@@ -27,7 +27,10 @@ describe("JwtGenerator", () => {
             const result = jwtGenerator.generateAccessToken(mockUserId)
 
             expect(mockSign).toHaveBeenCalledWith(
-                { jti: mockUserId },
+                {
+                    iss: "fitnessist app",
+                    jti: mockUserId
+                },
                 mockSecretKey,
                 { expiresIn: mockExpiresIn }
             )
@@ -42,7 +45,10 @@ describe("JwtGenerator", () => {
             const result = jwtGenerator.generateRefreshToken(mockUserId, "1d")
 
             expect(mockSign).toHaveBeenCalledWith(
-                { jti: mockUserId },
+                {
+                    iss: "fitnessist app",
+                    jti: mockUserId
+                },
                 mockSecretKey,
                 {
                     expiresIn: "1d"

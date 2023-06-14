@@ -1,8 +1,7 @@
 import { ValidationException } from "@common/exceptions/ValidationException"
 import Validator, { type ValidationError } from "fastest-validator"
 
-export interface TdeUserRequestDTO {
-    id: string
+export interface TdeUserRequestDTOInterface {
     gender: string
     age: number
     weight: number
@@ -11,10 +10,10 @@ export interface TdeUserRequestDTO {
     fat?: number
     user_id: string
     program_id: string
+    weight_target: number
 }
 
 export class TdeUserRequestDTO {
-    public id: string
     public gender: string
     public age: number
     public weight: number
@@ -25,10 +24,9 @@ export class TdeUserRequestDTO {
     public weight_target: number
     public program_id: string
 
-    constructor (dto: TdeUserRequestDTO) {
+    constructor (dto: TdeUserRequestDTOInterface) {
         this._validatePayload(dto)
 
-        this.id = dto.id
         this.gender = dto.gender
         this.age = dto.age
         this.weight = dto.weight
@@ -40,7 +38,7 @@ export class TdeUserRequestDTO {
         this.program_id = dto.program_id
     }
 
-    private _validatePayload (dto: TdeUserRequestDTO): void {
+    private _validatePayload (dto: TdeUserRequestDTOInterface): void {
         const schema: any = {
             gender: { type: "string", optional: false },
             age: { type: "number", optional: false },

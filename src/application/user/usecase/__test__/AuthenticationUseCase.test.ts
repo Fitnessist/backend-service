@@ -78,7 +78,7 @@ describe("AuthenticationUseCase", () => {
             expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(userData.email)
             expect(mockPasswordEncoder.validate).toHaveBeenCalledWith(userData.password, user.password)
             expect(mockJwtService.generateAccessToken).toHaveBeenCalledWith(user.id)
-            expect(mockJwtService.generateRefreshToken).toHaveBeenCalledWith(user.id, 3600)
+            expect(mockJwtService.generateRefreshToken).toHaveBeenCalledWith(user.id, 29030400)
             expect(mockTokenRepository.saveToken).toHaveBeenCalledWith(
                 expect.objectContaining({
                     userId: user.id,

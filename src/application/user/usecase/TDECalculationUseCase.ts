@@ -35,9 +35,9 @@ export class TDECalculationUseCase {
         // Lakukan logika perhitungan TDE berdasarkan data yang diberikan
         // Contoh: menggunakan rumus Harris-Benedict
         if (gender === "male") {
-            caloryEachDay = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
+            caloryEachDay = 66.5 + (13.75 * weight) + (5.003 * height) - (6.755 * age)
         } else if (gender === "female") {
-            caloryEachDay = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)
+            caloryEachDay = 655.1 + (9.563 * weight) + (1.850 * height) - (4.676 * age)
         }
         // Menyesuaikan TDE berdasarkan tingkat aktivitas
         if (activity === "sedentary") {
