@@ -2,6 +2,8 @@ import { type Request, type Response, type NextFunction } from "express"
 import { type TDECalculationUseCase } from "@application/user/usecase/TDECalculationUseCase"
 import { TdeUserRequestDTO } from "@domain/user/dto/TdeUserRequestDTO"
 import { sendSuccess } from "../ApiResponseHelper"
+import { HTTP_STATUS } from "@common/constants/HTTP_code"
+import { UnauthorizedException } from "@common/exceptions/UnauthorizedException"
 
 export class UserPropertiController {
     private readonly tdeCalculationUseCase: TDECalculationUseCase
@@ -11,6 +13,7 @@ export class UserPropertiController {
 
         // binding this
         this.calculateTDE = this.calculateTDE.bind(this)
+        this.getUserProperties = this.getUserProperties.bind(this)
     }
 
     calculateTDE (req: Request, res: Response, next: NextFunction): void {
@@ -22,5 +25,22 @@ export class UserPropertiController {
         }).catch((error: any) => {
             next(error)
         })
+    }
+
+    getUserProperties (req: Request, res: Response, next: NextFunction): void {
+        const user = req.currentUser
+        if (user === undefined) {
+            const err = new UnauthorizedException()
+            next(err)
+            return
+        }
+
+        this.tdeCalculationUseCase.getUserProperties(user)
+            .then((data) => {
+                sendSuccess(res, HTTP_STATUS.OK, data, "OK")
+            })
+            .catch((error: any) => {
+                next(error)
+            })
     }
 }

@@ -113,13 +113,19 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
     public async findByUserId (userId: string): Promise<UserProperti | null> {
         try {
             const query: QueryConfig = {
-                text: "SELECT id, gender, age, weight, height, activity, fat, user_id FROM user_properties WHERE user_id = $1 LIMIT 1",
+                text: `SELECT 
+                        id, gender, age, weight, height, activity, fat, user_id 
+                    FROM user_properties 
+                    WHERE user_id = $1 
+                    LIMIT 1`,
                 values: [userId]
             }
             const result = await this.pool.query(query)
+
             if (result.rowCount === 0) {
                 return null
             }
+
             const userProperties: UserProperti = result.rows[0]
             return userProperties
         } catch (error: any) {

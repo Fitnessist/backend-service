@@ -5,6 +5,7 @@ import { type TdeUserRequestDTO } from "@domain/user/dto/TdeUserRequestDTO"
 import { NotFoundException } from "@common/exceptions/NotFoundException"
 import { TdeUserResponseDTO } from "@domain/user/dto/TdeUserResponseDTO"
 import { type IProgramRepository } from "@domain/workout/repository/IProgramRepository"
+import { type User } from "@domain/user/entity/User"
 
 export class TDECalculationUseCase {
     private readonly userPropertiesRepository: IUserProperti
@@ -85,6 +86,18 @@ export class TDECalculationUseCase {
             throw new NotFoundException()
         }
         const responseData = new TdeUserResponseDTO(insertdata)
+        return responseData
+    }
+
+    public async getUserProperties (user: User): Promise<TdeUserResponseDTO> {
+        const userProperties = await this.userPropertiesRepository.findByUserId(user.id)
+
+        if (userProperties === null) {
+            throw new NotFoundException()
+        }
+        userProperties.user = user
+
+        const responseData = new TdeUserResponseDTO(userProperties)
         return responseData
     }
 }

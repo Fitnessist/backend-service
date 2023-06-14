@@ -9,5 +9,6 @@ const tdeCalculationUseCase = container.getInstance("TDECalculationUseCase") as 
 const tdeController = new UserPropertiController(tdeCalculationUseCase)
 
 router.post("/properties", authorizationMiddleware, tdeController.calculateTDE)
+router.get("/properties", authorizationMiddleware, tdeController.getUserProperties)
 
 export default router

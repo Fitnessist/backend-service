@@ -1,3 +1,5 @@
+import { type User } from "./User"
+
 export default class UserProperti {
     public id: string
     public gender: string
@@ -10,6 +12,7 @@ export default class UserProperti {
     public caloriesEachDay: number
     public weightTarget: number
     public caloriesEachDayTarget?: number
+    public user?: User
 
     constructor (payload: {
         id: string
@@ -23,6 +26,7 @@ export default class UserProperti {
         caloriesEachDayTarget?: number
         activity?: string
         fat?: number
+        user?: User
     }
     ) {
         this.id = payload.id
@@ -37,5 +41,6 @@ export default class UserProperti {
         this.weight = payload.weight
         this.weightTarget = payload.weightTarget
         this.caloriesEachDayTarget = payload.caloriesEachDayTarget
+        this.user = payload.user
     }
 }
