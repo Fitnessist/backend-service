@@ -44,7 +44,7 @@ export class MyProgramUseCase {
         }
     }
 
-    public async getMyProgramWithIdByUserId (userId: string, programId: string): Promise<MyProgramResponseDTO> {
+    public async getMyProgramWithIdByUserId (userId: string, programId?: string): Promise<MyProgramResponseDTO> {
         try {
             const myProgram = await this.myProgramRepo.findByUserIdAndProgramId(userId, programId)
             if (myProgram === null) {

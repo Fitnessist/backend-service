@@ -15,7 +15,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
 
     async findByUserIdAndProgramId (
         userId: string,
-        programId: string
+        programId?: string
     ): Promise<MyProgram | null> {
         const query: QueryConfig = {
             text: `
@@ -40,10 +40,15 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
                     JOIN programs P 
                         ON P.id = UP.program_id
                     WHERE UP.user_id = $1 
-                    AND UP.program_id = $2
                 `,
-            values: [userId, programId]
+            values: [userId]
         }
+
+        if (programId !== undefined) {
+            query.text += "AND UP.program_id = $2"
+            query.values?.push(programId)
+        }
+
         const result = await this.pool.query(query)
         if (result.rowCount <= 0) {
             return null

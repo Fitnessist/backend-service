@@ -44,18 +44,8 @@ export default class MyProgramController {
             sendError(res, HTTP_STATUS.UNAUTHORIZED, "Unauthorized", "AUTHENTICATED_ERROR")
             return
         }
-        if (programId === undefined || programId === null) {
-            const err = new ValidationException([
-                {
-                    type: "required",
-                    field: "program_id",
-                    message: "program_id is required"
-                }
-            ])
-            next(err)
-            return
-        }
-        if (typeof programId !== "string") {
+
+        if (programId === undefined && typeof programId !== "string") {
             const err = new ValidationException([
                 {
                     type: "string",
@@ -67,7 +57,7 @@ export default class MyProgramController {
             return
         }
 
-        this.myProgramUseCase.getMyProgramWithIdByUserId(currentUser.id, programId)
+        this.myProgramUseCase.getMyProgramWithIdByUserId(currentUser.id, programId !== undefined ? programId as string : undefined)
             .then((data) => {
                 sendSuccess(res, HTTP_STATUS.OK, data, "OK")
             })
