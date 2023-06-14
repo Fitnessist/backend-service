@@ -45,7 +45,7 @@ export default class MyProgramController {
             return
         }
 
-        if (programId === undefined && typeof programId !== "string") {
+        if (programId !== undefined && typeof programId !== "string") {
             const err = new ValidationException([
                 {
                     type: "string",
@@ -57,7 +57,7 @@ export default class MyProgramController {
             return
         }
 
-        this.myProgramUseCase.getMyProgramWithIdByUserId(currentUser.id, programId !== undefined ? programId as string : undefined)
+        this.myProgramUseCase.getMyProgramWithIdByUserId(currentUser.id, programId !== undefined ? programId : undefined)
             .then((data) => {
                 sendSuccess(res, HTTP_STATUS.OK, data, "OK")
             })
