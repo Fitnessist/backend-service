@@ -14,6 +14,7 @@ export class UserPropertiController {
         // binding this
         this.calculateTDE = this.calculateTDE.bind(this)
         this.getUserProperties = this.getUserProperties.bind(this)
+        this.updateUserProperties = this.updateUserProperties.bind(this)
     }
 
     calculateTDE (req: Request, res: Response, next: NextFunction): void {
@@ -21,6 +22,22 @@ export class UserPropertiController {
 
         const dto: TdeUserRequestDTO = new TdeUserRequestDTO({ ...req.body, user_id: user?.id })
         this.tdeCalculationUseCase.calculateTDE(dto).then((data) => {
+            sendSuccess(res, 200, data, "OK")
+        }).catch((error: any) => {
+            next(error)
+        })
+    }
+
+    updateUserProperties (req: Request, res: Response, next: NextFunction): void {
+        const user = req.currentUser
+        if (user === undefined) {
+            const err = new UnauthorizedException()
+            next(err)
+            return
+        }
+
+        const dto: TdeUserRequestDTO = new TdeUserRequestDTO({ ...req.body, user_id: user?.id })
+        this.tdeCalculationUseCase.updateCalculateTDE(user.id, dto).then((data) => {
             sendSuccess(res, 200, data, "OK")
         }).catch((error: any) => {
             next(error)

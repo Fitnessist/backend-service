@@ -10,5 +10,6 @@ const tdeController = new UserPropertiController(tdeCalculationUseCase)
 
 router.post("/properties", authorizationMiddleware, tdeController.calculateTDE)
 router.get("/properties", authorizationMiddleware, tdeController.getUserProperties)
+router.put("/properties", authorizationMiddleware, tdeController.updateUserProperties)
 
 export default router

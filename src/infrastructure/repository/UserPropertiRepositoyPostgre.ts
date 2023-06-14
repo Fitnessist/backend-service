@@ -93,6 +93,52 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
         }
     }
 
+    public async update (userProperties: UserProperti): Promise<UserProperti> {
+        const query: QueryConfig = {
+            text: `
+            UPDATE user_properties
+            SET gender = $2, age = $3, weight = $4, height = $5, activity = $6, fat = $7, calories_each_day = $8, calories_each_day_target = $9
+            WHERE id = $1
+            RETURNING *`,
+            values: [
+                userProperties.id,
+                userProperties.gender,
+                userProperties.age,
+                userProperties.weight,
+                userProperties.height,
+                userProperties.activity,
+                userProperties.fat,
+                userProperties.caloriesEachDay,
+                userProperties.caloriesEachDayTarget
+            ]
+        }
+
+        try {
+            const result = await this.pool.query(query)
+
+            const updatedUserProperties: UserProperti = new UserProperti({
+                id: result.rows[0].id,
+                gender: result.rows[0].gender,
+                age: result.rows[0].age,
+                weight: result.rows[0].weight,
+                height: result.rows[0].height,
+                userId: result.rows[0].user_id,
+                caloriesEachDay: result.rows[0].calories_each_day,
+                activity: result.rows[0].activity,
+                fat: result.rows[0].fat,
+                caloriesEachDayTarget: result.rows[0].calories_each_day_target,
+                weightTarget: result.rows[0].weight_target
+            })
+
+            return updatedUserProperties
+        } catch (error: any) {
+            this.logger.error(
+                `Error during updating data: ${String(error.stack)}`
+            )
+            throw error
+        }
+    }
+
     public async getAll (): Promise<UserProperti[]> {
         try {
             const query: QueryConfig = {

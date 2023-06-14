@@ -6,4 +6,5 @@ export interface IUserProperti {
     create: (userProperti: UserProperti) => Promise<UserProperti | null>
     getAll: () => Promise<UserProperti[]>
     findByUserId: (userId: string) => Promise<UserProperti | null>
+    update: (payload: UserProperti) => Promise<UserProperti>
 }
