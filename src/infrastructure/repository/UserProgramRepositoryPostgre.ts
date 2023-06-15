@@ -145,7 +145,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
         }
     }
 
-    async findByUserId (userId: string): Promise<MyProgram | null> {
+    async findByUserId (userId: string): Promise<MyProgram[] | null> {
         const query: QueryConfig = {
             text: `
             SELECT 
@@ -161,21 +161,24 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
             return null
         }
 
-        const userProgramData = result.rows[0]
-        const userProgram = new MyProgram(
-            userProgramData.id,
-            userProgramData.user_id,
-            userProgramData.program_id,
-            userProgramData.exercise_completed_counter,
-            userProgramData.workout_completed_counter
-        )
-        userProgram.exerciseCompletedCounter = userProgramData.exercise_completed_counter
-        userProgram.workoutCompletedCounter = userProgramData.workout_completed_counter
-        userProgram.totalExercises = userProgramData.total_exercises
-        userProgram.totalWorkouts = userProgramData.total_workouts
-        userProgram.progressPercent = userProgramData.progress_percent
+        const userProgramData = result.rows.map((data) => {
+            const userProgram = new MyProgram(
+                data.id,
+                data.user_id,
+                data.program_id,
+                data.exercise_completed_counter,
+                data.workout_completed_counter
+            )
+            userProgram.exerciseCompletedCounter = data.exercise_completed_counter
+            userProgram.workoutCompletedCounter = data.workout_completed_counter
+            userProgram.totalExercises = data.total_exercises
+            userProgram.totalWorkouts = data.total_workouts
+            userProgram.progressPercent = data.progress_percent
 
-        return userProgram
+            return userProgram
+        })
+
+        return userProgramData
     }
 
     async findByProgramId (programId: string): Promise<MyProgram | null> {

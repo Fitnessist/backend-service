@@ -44,10 +44,9 @@ export class MyProgramUseCase {
         }
     }
 
-    public async getMyProgramWithIdByUserId (userId: string, programId?: string): Promise<MyProgramResponseDTO> {
+    public async getMyProgramWithIdByUserId (userId: string, programId?: string): Promise<MyProgramResponseDTO[] | MyProgramResponseDTO> {
         try {
-            let myProgram: MyProgram | null
-            console.log("program ID", programId)
+            let myProgram: MyProgram | MyProgram[] | null
 
             if (programId !== undefined) {
                 myProgram = await this.myProgramRepo.findByUserIdAndProgramId(userId, programId)
@@ -62,8 +61,11 @@ export class MyProgramUseCase {
                 throw new NotFoundException("program not found for this id")
             }
 
-            const myProgramResponse = new MyProgramResponseDTO(myProgram)
-            return myProgramResponse
+            if (Array.isArray(myProgram)) {
+                const myProgramResponse = myProgram.map((data) => (new MyProgramResponseDTO(data)))
+                return myProgramResponse
+            }
+            return new MyProgramResponseDTO(myProgram)
         } catch (error: any) {
             this.logger.error(error?.stack)
             throw error
