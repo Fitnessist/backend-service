@@ -29,13 +29,14 @@ export default class WorkoutController {
     }
 
     getAllWorkouts (req: Request, res: Response, next: NextFunction): void {
-        const { workoutId, page, perPage } = req.query
-        const workoutIdString = String(workoutId)
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const { program_id, page, perPage } = req.query
+        const programIdString = String(program_id)
         const pageNumber = Number(page ?? 1)
         const perPageNumber = Number(perPage ?? 10)
 
         this.workoutUseCase
-            .getAllWorkouts(workoutIdString, pageNumber, perPageNumber)
+            .getAllWorkouts(programIdString, pageNumber, perPageNumber)
             .then((datas) => {
                 sendSuccess(res, HTTP_STATUS.OK, datas, "OK")
             })

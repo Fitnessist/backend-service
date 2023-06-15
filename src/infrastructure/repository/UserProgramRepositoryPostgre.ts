@@ -108,7 +108,6 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
                 values: [userProgram.programId]
             }
 
-            console.log(__filename, "check 1")
             const totalWorkoutPromise = this.pool.query(totalWorkoutQ)
             const totalExercisePromise = this.pool.query(totalExerciseQ)
             const [totalWorkout, totalExercise] = await Promise.all([
@@ -116,7 +115,6 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
                 totalExercisePromise
             ])
 
-            console.log(__filename, "check 2")
             const query: QueryConfig = {
                 text: `
                 INSERT INTO user_programs (id, user_id, program_id, total_exercises, total_workouts)
@@ -132,7 +130,6 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
                 ]
             }
 
-            console.log(__filename, "check 3")
             const result = await this.pool.query(query)
             const insertedUserProgram: MyProgram = userProgram
             insertedUserProgram.id = result.rows[0].id

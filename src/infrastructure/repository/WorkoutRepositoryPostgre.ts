@@ -21,16 +21,17 @@ export default class WorkoutRepositoryPostgre implements IWorkoutRepository {
             text: ""
         }
 
-        if (programId === "") {
+        if (programId !== "") {
+            console.log("programId", programId)
             query = {
                 text: "SELECT * FROM workouts WHERE program_id = $1 LIMIT $2 OFFSET $3",
                 values: [programId, limit, offset]
             }
-        }
-
-        query = {
-            text: "SELECT * FROM workouts LIMIT $1 OFFSET $2",
-            values: [limit, offset]
+        } else {
+            query = {
+                text: "SELECT * FROM workouts LIMIT $1 OFFSET $2",
+                values: [limit, offset]
+            }
         }
 
         const result = await this.pool.query(query)

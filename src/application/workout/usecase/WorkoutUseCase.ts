@@ -44,8 +44,7 @@ export default class WorkoutUseCase {
         const baseUrl = process.env.APP_HOST ?? "http://localhost"
 
         try {
-            const totalWorkoutromise =
-                await this.workoutRepository.countTotalItems()
+            const totalWorkoutromise = await this.workoutRepository.countTotalItems()
             const workoutsPromise = await this.workoutRepository.getAll(
                 programId,
                 pageSize,
