@@ -36,7 +36,7 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
 
     public async create (
         userProperties: UserProperti
-    ): Promise<UserProperti | null> {
+    ): Promise<UserProperti> {
         const query: QueryConfig = {
             text: `
              INSERT INTO user_properties 
@@ -68,9 +68,7 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
         }
         try {
             const result = await this.pool.query(query)
-            if (result.rowCount === 0) {
-                return null
-            }
+
             const insertedUserProperties: UserProperti = new UserProperti({
                 id: result.rows[0].id,
                 gender: result.rows[0].gender,
@@ -89,7 +87,7 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
             this.logger.error(
                 `Error during creating data: ${String(error.stack)}`
             )
-            return null
+            throw error
         }
     }
 

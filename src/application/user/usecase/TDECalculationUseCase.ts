@@ -73,11 +73,6 @@ export class TDECalculationUseCase {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { gender, age, weight, height, user_id, activity, fat: fatInPercentage, weight_target, program_id } = dataTDE
 
-        let fat
-        if (fatInPercentage !== undefined) {
-            fat = fatInPercentage / 100
-        }
-
         let userProperti = await this.userPropertiesRepository.findByUserId(userId)
         if (userProperti == null) {
             throw new NotFoundException()
@@ -99,7 +94,7 @@ export class TDECalculationUseCase {
                 height,
                 weight,
                 activity,
-                fat,
+                fat: fatInPercentage,
                 caloriesEachDay: caloryEachDay,
                 weightTarget: weight_target,
                 caloriesEachDayTarget,
