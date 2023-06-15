@@ -40,13 +40,9 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
                     JOIN programs P 
                         ON P.id = UP.program_id
                     WHERE UP.user_id = $1 
+                    AND UP.program_id = $2
                 `,
-            values: [userId]
-        }
-
-        if (programId !== undefined) {
-            query.text += "AND UP.program_id = $2"
-            query.values?.push(programId)
+            values: [userId, programId]
         }
 
         const result = await this.pool.query(query)
@@ -147,6 +143,39 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
             }
             throw error
         }
+    }
+
+    async findByUserId (userId: string): Promise<MyProgram | null> {
+        const query: QueryConfig = {
+            text: `
+            SELECT 
+                *
+            FROM user_programs UP
+            WHERE UP.user_id = $1
+            `,
+            values: [userId]
+        }
+
+        const result = await this.pool.query(query)
+        if (result.rowCount <= 0) {
+            return null
+        }
+
+        const userProgramData = result.rows[0]
+        const userProgram = new MyProgram(
+            userProgramData.id,
+            userProgramData.user_id,
+            userProgramData.program_id,
+            userProgramData.exercise_completed_counter,
+            userProgramData.workout_completed_counter
+        )
+        userProgram.exerciseCompletedCounter = userProgramData.exercise_completed_counter
+        userProgram.workoutCompletedCounter = userProgramData.workout_completed_counter
+        userProgram.totalExercises = userProgramData.total_exercises
+        userProgram.totalWorkouts = userProgramData.total_workouts
+        userProgram.progressPercent = userProgramData.progress_percent
+
+        return userProgram
     }
 
     async findByProgramId (programId: string): Promise<MyProgram | null> {

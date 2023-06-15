@@ -30,7 +30,7 @@ export class AuthenticationUseCase {
         this.tokenService = tokenService
     }
 
-    public async loginUser (userData: LoginUser): Promise<{ accessToken: string, refreshToken: string }> {
+    public async loginUser (userData: LoginUser): Promise<{ user: UserResponseDTO, accessToken: string, refreshToken: string }> {
         const { email, password } = userData
 
         // Find user by email
@@ -60,8 +60,12 @@ export class AuthenticationUseCase {
             expiresAt: refreshTokenExpiresInDate
         }
         await this.tokenRepository.saveToken(token)
-
-        return { accessToken, refreshToken }
+        const userResponse = new UserResponseDTO(user)
+        return {
+            user: userResponse,
+            accessToken,
+            refreshToken
+        }
     }
 
     public async findById (userId: string): Promise<UserResponseDTO> {

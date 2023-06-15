@@ -46,10 +46,22 @@ export class MyProgramUseCase {
 
     public async getMyProgramWithIdByUserId (userId: string, programId?: string): Promise<MyProgramResponseDTO> {
         try {
-            const myProgram = await this.myProgramRepo.findByUserIdAndProgramId(userId, programId)
+            let myProgram: MyProgram | null
+            console.log("program ID", programId)
+
+            if (programId !== undefined) {
+                myProgram = await this.myProgramRepo.findByUserIdAndProgramId(userId, programId)
+                if (myProgram === null) {
+                    throw new NotFoundException("program not found for this id")
+                }
+            } else {
+                myProgram = await this.myProgramRepo.findByUserId(userId)
+            }
+
             if (myProgram === null) {
                 throw new NotFoundException("program not found for this id")
             }
+
             const myProgramResponse = new MyProgramResponseDTO(myProgram)
             return myProgramResponse
         } catch (error: any) {
