@@ -63,7 +63,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
         )
         myProgram.totalExercises = data.total_exercises
         myProgram.totalWorkouts = data.total_workouts
-        myProgram.workoutCompletedCounter = data.workout_completed_counter
+        myProgram.workoutCompletedCounter = Number(data.workout_completed_counter)
 
         const totalWorkoutsQuery: QueryConfig = {
             text: `
