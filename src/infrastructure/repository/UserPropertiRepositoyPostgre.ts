@@ -95,7 +95,7 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
         const query: QueryConfig = {
             text: `
             UPDATE user_properties
-            SET gender = $2, age = $3, weight = $4, height = $5, activity = $6, fat = $7, calories_each_day = $8, calories_each_day_target = $9
+            SET gender = $2, age = $3, weight = $4, height = $5, activity = $6, fat = $7, calories_each_day = $8, calories_each_day_target = $9, weight_target = $10
             WHERE id = $1
             RETURNING *`,
             values: [
@@ -107,7 +107,8 @@ export class UserPropertiesRepositoryPostgre implements IUserProperti {
                 userProperties.activity,
                 userProperties.fat,
                 userProperties.caloriesEachDay,
-                userProperties.caloriesEachDayTarget
+                userProperties.caloriesEachDayTarget,
+                userProperties.weightTarget
             ]
         }
 
