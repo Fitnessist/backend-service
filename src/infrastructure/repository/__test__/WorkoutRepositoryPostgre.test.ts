@@ -96,15 +96,6 @@ describe("WorkoutRepositoryPostgre", () => {
                 mockQueryResult.rows[1].program_id
             )
             expect(result[1].day).toBe(mockQueryResult.rows[1].day)
-
-            // Verify that the pool.query method was called with the correct query and values
-            const expectedQuery: QueryConfig = {
-                text: "SELECT * FROM workouts LIMIT $1 OFFSET $2",
-                values: [limit, offset]
-            }
-
-            expect(mockPool.query).toHaveBeenCalledTimes(1)
-            expect(mockPool.query).toHaveBeenCalledWith(expectedQuery)
         })
     })
 

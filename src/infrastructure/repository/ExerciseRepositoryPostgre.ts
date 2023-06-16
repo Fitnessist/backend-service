@@ -63,16 +63,17 @@ class ExerciseRepositoryPostgre implements IExerciseRepository {
                 exerciseMap.set(id, exercise)
             }
 
-            const exerciseLevel = new ExerciseLevel(
-                exercise_level_id,
-                id,
+            const exerciseLevel = new ExerciseLevel({
+                id: exercise_level_id,
+                exerciseId: id,
                 level,
                 sets,
-                reps,
+                repetition: reps,
                 duration,
-                calories_burned,
+                caloriesBurned: calories_burned,
                 points
-            )
+            })
+
             exercise.exerciseLevels?.push(exerciseLevel)
         })
 

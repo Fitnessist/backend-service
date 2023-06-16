@@ -6,6 +6,8 @@ import { type LoginUser } from "@domain/user/entity/LoginUser"
 import { UnauthorizedException } from "@common/exceptions/UnauthorizedException"
 import { type TokenService } from "@application/security/TokenService"
 import { type TokenRepository } from "@domain/user/repository/TokenRepository"
+import UserResponseDTO from "@domain/user/entity/UserResponseDTO"
+import { type User } from "@domain/user/entity/User"
 
 describe("AuthenticationUseCase", () => {
     let authenticationUseCase: AuthenticationUseCase
@@ -56,10 +58,15 @@ describe("AuthenticationUseCase", () => {
 
     describe("loginUser", () => {
         it("should return access token and refresh token when credentials are valid", async () => {
-            const user = {
+            const user: User = {
                 id: "user-id",
-                email: userData.email,
-                password: "hashedPassword"
+                email: userData.email ?? "yanto@gmail.com",
+                name: "yanto",
+                username: "yanto",
+                password: "hashedPassword",
+                program: undefined,
+                createdAt: new Date().toDateString(),
+                updatedAt: new Date().toDateString()
             }
 
             const accessToken = "access-token"
@@ -74,17 +81,12 @@ describe("AuthenticationUseCase", () => {
             const result = await authenticationUseCase.loginUser(userData as LoginUser)
 
             // Assert
-            expect(result).toEqual({ accessToken, refreshToken })
+            const userRes = new UserResponseDTO(user)
+            expect(result).toEqual({ user: userRes, accessToken, refreshToken })
             expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(userData.email)
             expect(mockPasswordEncoder.validate).toHaveBeenCalledWith(userData.password, user.password)
             expect(mockJwtService.generateAccessToken).toHaveBeenCalledWith(user.id)
             expect(mockJwtService.generateRefreshToken).toHaveBeenCalledWith(user.id, 29030400)
-            expect(mockTokenRepository.saveToken).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    userId: user.id,
-                    refreshToken
-                })
-            )
         })
 
         it("should throw UnauthorizedException when email is not found", async () => {

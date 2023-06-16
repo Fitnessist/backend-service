@@ -150,38 +150,38 @@ describe("ExerciseRepositoryPostgre", () => {
             // Expected result
             const expectedExercises: Exercise[] = [
                 new Exercise("exercise-1", "Exercise 1", "media-1", workoutId, [
-                    new ExerciseLevel(
-                        "level-1",
-                        "exercise-1",
-                        "Level 1",
-                        3,
-                        10,
-                        60,
-                        100,
-                        50
-                    ),
-                    new ExerciseLevel(
-                        "level-2",
-                        "exercise-1",
-                        "Level 2",
-                        4,
-                        12,
-                        45,
-                        120,
-                        60
-                    )
+                    new ExerciseLevel({
+                        id: "level-1",
+                        exerciseId: "exercise-1",
+                        level: "Level 1",
+                        sets: 3,
+                        repetition: 10,
+                        duration: 60,
+                        caloriesBurned: 100,
+                        points: 50
+                    }),
+                    new ExerciseLevel({
+                        id: "level-2",
+                        exerciseId: "exercise-1",
+                        level: "Level 2",
+                        sets: 4,
+                        repetition: 12,
+                        duration: 45,
+                        caloriesBurned: 120,
+                        points: 60
+                    })
                 ]),
                 new Exercise("exercise-2", "Exercise 2", "media-2", workoutId, [
-                    new ExerciseLevel(
-                        "level-3",
-                        "exercise-2",
-                        "Level 3",
-                        5,
-                        15,
-                        30,
-                        150,
-                        70
-                    )
+                    new ExerciseLevel({
+                        id: "level-3",
+                        exerciseId: "exercise-2",
+                        level: "Level 3",
+                        sets: 5,
+                        repetition: 15,
+                        duration: 30,
+                        caloriesBurned: 150,
+                        points: 70
+                    })
                 ])
             ]
 

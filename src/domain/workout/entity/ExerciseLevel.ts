@@ -8,24 +8,24 @@ class ExerciseLevel {
     public caloriesBurned?: number
     public points?: number
 
-    constructor (
-        id: string,
-        exerciseId: string,
-        level: string,
-        repetition: number,
-        duration: number,
-        sets?: number,
-        caloriesBurned?: number,
+    constructor (payload: {
+        id: string
+        exerciseId: string
+        level: string
+        repetition: number
+        duration: number
+        sets?: number
+        caloriesBurned?: number
         points?: number
-    ) {
-        this.id = id
-        this.exerciseId = exerciseId
-        this.level = level
-        this.repetition = repetition
-        this.duration = duration
-        this.sets = sets
-        this.caloriesBurned = caloriesBurned
-        this.points = points
+    }) {
+        this.id = payload.id
+        this.exerciseId = payload.exerciseId
+        this.level = payload.level
+        this.repetition = payload.repetition
+        this.duration = payload.duration
+        this.sets = payload.sets
+        this.caloriesBurned = payload.caloriesBurned
+        this.points = payload.points
     }
 }
 
