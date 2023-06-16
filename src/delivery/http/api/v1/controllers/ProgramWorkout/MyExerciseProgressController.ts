@@ -20,10 +20,15 @@ export class MyExerciseProgressController {
     }
 
     public findByUser (req: Request, res: Response, next: NextFunction): void {
-        const { userId } = req.params
+        const user = req.currentUser
+        if (user === undefined) {
+            const error = new UnauthorizedException()
+            next(error)
+            return
+        }
 
         this.myExerciseProgressUseCase
-            .findByUser(userId)
+            .findByUser(user.id)
             .then((myExerciseProgress) => {
                 sendSuccess(res, HTTP_STATUS.OK, myExerciseProgress, "OK")
             })

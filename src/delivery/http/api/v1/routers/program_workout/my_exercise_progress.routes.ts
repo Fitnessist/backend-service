@@ -17,7 +17,7 @@ const myInventoryUC = container.getInstance(
 const controller = new MyExerciseProgressController(exerciseUC, myInventoryUC)
 
 router.get("/inventories", authorizationMiddleware, controller.getInventory)
-router.get("/:userId", authorizationMiddleware, controller.findByUser)
+router.get("/", authorizationMiddleware, controller.findByUser)
 router.post("/", authorizationMiddleware, controller.create)
 
 export default router
