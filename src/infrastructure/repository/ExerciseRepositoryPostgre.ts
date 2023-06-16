@@ -43,35 +43,21 @@ class ExerciseRepositoryPostgre implements IExerciseRepository {
         const exerciseMap = new Map<string, Exercise>()
 
         exerciseResult.rows.forEach((row) => {
-            const {
-                id,
-                name,
-                media,
-                workout_id,
-                exercise_level_id,
-                level,
-                sets,
-                reps,
-                duration,
-                calories_burned,
-                points
-            } = row
-
-            let exercise = exerciseMap.get(id)
+            let exercise = exerciseMap.get(row.id)
             if (exercise == null || exercise === undefined) {
-                exercise = new Exercise(id, name, media, workout_id)
-                exerciseMap.set(id, exercise)
+                exercise = new Exercise(row.id, row.name, row.media, row.workout_id)
+                exerciseMap.set(row.id, exercise)
             }
 
             const exerciseLevel = new ExerciseLevel({
-                id: exercise_level_id,
-                exerciseId: id,
-                level,
-                sets,
-                repetition: reps,
-                duration,
-                caloriesBurned: calories_burned,
-                points
+                id: row.exercise_level_id,
+                exerciseId: row.id,
+                level: row.level,
+                sets: row.sets,
+                repetition: row.reps,
+                duration: row.duration,
+                caloriesBurned: row.calories_burned,
+                points: row.points
             })
 
             exercise.exerciseLevels?.push(exerciseLevel)

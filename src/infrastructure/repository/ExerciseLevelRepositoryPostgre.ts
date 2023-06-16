@@ -28,6 +28,15 @@ export class ExerciseLevelRepositoryPostgre implements IExerciseLevelRepository 
             return null
         }
         const row = exerciseResult.rows[0]
-        return new ExerciseLevel(row.id, row.exercise_id, row.level, row.reps, row.duration, row.sets, row.calories_burned, row.points)
+        return new ExerciseLevel({
+            id: row.id,
+            exerciseId: row.exercise_id,
+            level: row.level,
+            repetition: row.reps,
+            duration: row.duration,
+            sets: row.sets,
+            caloriesBurned: row.calories_burned,
+            points: row.points
+        })
     }
 }

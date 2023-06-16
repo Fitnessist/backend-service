@@ -93,15 +93,15 @@ export class UserExerciseProgressRepositoryImpl implements MyProgressRepository 
                     row.media
                 )
 
-                const exerciseLevel = new ExerciseLevel(
-                    row.exercise_level_id,
-                    row.exercise_id,
-                    row.level,
-                    row.reps,
-                    row.duration,
-                    row.sets,
-                    row.calories_burned
-                )
+                const exerciseLevel = new ExerciseLevel({
+                    id: row.exercise_level_id,
+                    exerciseId: row.exercise_id,
+                    level: row.level,
+                    repetition: row.reps,
+                    duration: row.duration,
+                    sets: row.sets,
+                    caloriesBurned: row.calories_burned
+                })
 
                 // Set data terkait pada MyExerciseProgress
                 myProgress.user = user
