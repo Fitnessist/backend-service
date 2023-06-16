@@ -146,9 +146,19 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
         const query: QueryConfig = {
             text: `
             SELECT 
-                *
+            UP.id,
+            UP.user_id,
+            UP.program_id,
+            UP.created_at as user_programs_created_at,
+            UP.updated_at as user_programs_updated_at,
+            UP.total_workouts as total_workouts,
+            UP.total_exercises as total_exercises,
+            UP.exercise_completed_counter as exercise_completed_counter,
+            P.id AS program_id,
+            P.title
             FROM user_programs UP
             WHERE UP.user_id = $1
+            JOIN programs P ON P.id = UP.program_id
             `,
             values: [userId]
         }
@@ -159,6 +169,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
         }
 
         const userProgramData = result.rows.map((data) => {
+            const program = new Program(data.program_id, data.title)
             const userProgram = new MyProgram(
                 data.id,
                 data.user_id,
@@ -171,6 +182,7 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
             userProgram.totalExercises = data.total_exercises
             userProgram.totalWorkouts = data.total_workouts
             userProgram.progressPercent = data.progress_percent
+            userProgram.program = program
 
             return userProgram
         })
