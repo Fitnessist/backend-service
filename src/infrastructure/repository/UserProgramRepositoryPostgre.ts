@@ -157,8 +157,8 @@ export class UserProgramRepositoryPostgre implements MyProgramRepository {
             P.id AS program_id,
             P.title
             FROM user_programs UP
-            WHERE UP.user_id = $1
             JOIN programs P ON P.id = UP.program_id
+            WHERE UP.user_id = $1
             `,
             values: [userId]
         }
