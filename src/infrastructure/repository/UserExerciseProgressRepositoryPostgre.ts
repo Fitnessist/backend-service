@@ -64,14 +64,14 @@ export class UserExerciseProgressRepositoryImpl implements MyProgressRepository 
 
                 if (myProgress == null || myProgress === undefined) {
                     myProgress = new MyExerciseProgress({
-                        id: row.id,
+                        id: row.progress_id,
                         programId: row.program_id,
                         workoutId: row.workout_id,
                         exerciseId: row.exercise_id,
                         exerciseLevelId: row.exercise_level_id,
                         userId: row.user_id
                     })
-                    myProgressListMap.set(row.id, myProgress)
+                    myProgressListMap.set(row.progress_id, myProgress)
                 }
 
                 // Mapping data terkait dari tabel-tabel lain
